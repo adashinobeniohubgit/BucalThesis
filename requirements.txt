@@ -10,3 +10,11 @@ MarkupSafe==3.0.3
 SQLAlchemy==2.0.51
 typing_extensions==4.15.0
 Werkzeug==3.1.8
+
+
+#FOLLOW THIS STEPS AFTER PULLING THE REPO
+#1. Create a virtual environment (python -m venv env)
+#2. Activate the virtual environment (env/Scripts/activate)
+#3. Install the dependencies (pip install -r requirements.txt)
+#Done
+#P.S follow the standard file/folder name management and structure for the project. (see flask documentation online for reference)
