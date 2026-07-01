@@ -4,9 +4,6 @@ from app import db
 
 main_bp = Blueprint('main', __name__)
 
-# ==========================================
-# 1. Authentication Routes (Login & Logout)
-# ==========================================
 
 @main_bp.route("/login", methods=['GET', 'POST'])
 def login():
@@ -39,10 +36,6 @@ def logout():
     flash('You have been logged out.', 'info')
     return redirect(url_for('main.login'))
 
-
-# ==========================================
-# 2. Protected System Views
-# ==========================================
 
 # Dashboard/Base View
 @main_bp.route("/")
