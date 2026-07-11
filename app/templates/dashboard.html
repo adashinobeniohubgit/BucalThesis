@@ -3,39 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{url_for('static', filename="css/index.css")}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/output.css')}}">
     {% block head %}{% endblock %}
 </head>
 <body>
     <div class="sidebar">
         <div class="logo-details">
-            <i class='bx bxs-graduation'></i>
             <span class="logo_name">Bucal Portal</span>
         </div>
         
         <ul class="nav-links">
             <li>
-                <a href="{{ url_for('main.index') }}" class="active">
-                    <i class='bx bxs-dashboard'></i>
+                <a href="{{ url_for('main.index') }}">
                     <span class="link_name">Dashboard</span>
                 </a>
             </li>
             <li>
                 <a href="{{ url_for('main.enrollment') }}">
-                    <i class='bx bxs-user-detail'></i>
                     <span class="link_name">Enrollment</span>
                 </a>
             </li>
             <li>
                 <a href="{{ url_for('main.grades') }}">
-                    <i class='bx bx-bar-chart-alt-2'></i>
                     <span class="link_name">Grades</span>
                 </a>
             </li>
             
             <li class="log-out">
-                <a href="#">
-                    <i class='bx bx-log-out'></i>
+                <a href="{{ url_for('main.logout') }}" class="btn btn-danger">
                     <span class="link_name">Logout</span>
                 </a>
             </li>

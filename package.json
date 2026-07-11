@@ -1,0 +1,26 @@
+{
+  "name": "bucalthesis",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/adashinobeniohubgit/BucalThesis#readme",
+  "bugs": {
+    "url": "https://github.com/adashinobeniohubgit/BucalThesis/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adashinobeniohubgit/BucalThesis.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "npx @tailwindcss/cli -i ./app/static/css/input.css -o ./app/static/css/output.css --watch"
+  },
+  "dependencies": {
+    "@tailwindcss/cli": "^4.3.2",
+    "tailwindcss": "^4.3.2"
+  },
+  "devDependencies": {}
+}
