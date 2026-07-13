@@ -46,11 +46,25 @@ def index():
     return render_template('dashboard.html', username=session['username'])
 
 # Enrollment View
-@main_bp.route("/enrollment")
+@main_bp.route("/enrollment", methods=['GET', 'POST'])
 def enrollment():
     if 'user_id' not in session:
         return redirect(url_for('main.login'))
-        
+
+    if request.method == 'POST':
+        school_year = request.form.get('schoolYear')
+        grade = request.form.get('schoolGrade')
+        if grade == 'other':
+            grade = request.form.get('schoolGradeOther')
+
+        # TODO: validate and save to your database here
+        # e.g. new_enrollment = Enrollment(school_year=school_year, grade=grade, user_id=session['user_id'])
+        # db.session.add(new_enrollment)
+        # db.session.commit()
+
+        flash('Enrollment saved successfully!', 'success')
+        return redirect(url_for('main.enrollment'))
+
     return render_template('enrollment.html')
 
 # Grades View

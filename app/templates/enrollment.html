@@ -2,4 +2,27 @@
 
 {% block content %}
 <h1>Sample content</h1>
+<form method="POST" action="{{ url_for('main.enrollment') }}">
+  <label for="schoolYear">School Year</label>
+  <input type="text" id="schoolYear" name="schoolYear" readonly>
+
+  <label for="schoolGrade">Grade</label>
+  <select id="schoolGrade" name="schoolGrade" required>
+    <option value="" disabled selected>Select grade</option>
+    <option value="Kindergarten">Kindergarten</option>
+    <option value="1">Grade 1</option>
+    <option value="2">Grade 2</option>
+    <option value="3">Grade 3</option>
+    <option value="4">Grade 4</option>
+    <option value="5">Grade 5</option>
+    <option value="6">Grade 6</option>
+  </select>
+
+
+  <button type="submit" id="submitBtn">Submit</button>
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/enrollment.js') }}"></script>
 {% endblock %}
