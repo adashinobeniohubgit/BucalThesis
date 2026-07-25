@@ -44,7 +44,7 @@
     </fieldset>
   </div>
   <h3>INSTRUCTIONS:</h3>
-  <p>Print legibly all information required in CAPITAL letters. Submit accomplished form to the Person-in-Charge/Registrar/Class Adviser. Use black or blue pen only.</p>
+  <p>(..Dito muna di ko alam gagawin dito kung tatanggalin ko o hindi..)Print legibly all information required in CAPITAL letters. Submit accomplished form to the Person-in-Charge/Registrar/Class Adviser. Use black or blue pen only.</p>
   
   <h1>LEARNER INFORMATION</h1>
   <div>
@@ -84,6 +84,171 @@
       <input type="text" id="extension_name" name="extension_name">
     </fieldset>
   </div>
+
+  <div>
+    <label for="birthdate">Birthdate</label>
+    <input type="date" id="birthdate" name="birthdate" required>
+
+    <label for="place_of_birth">Place of Birth (Municipality/City)</label>
+    <input type="text" id="place_of_birth" name="place_of_birth" required>
+
+    <label for="mother_tongue">Mother Tongue</label>
+    <input type="text" id="mother_tongue" name="mother_tongue" required>
+  </div>
+
+  <fieldset>
+    <label>Sex</label>
+    <label>
+      <input type="radio" name="sex" value="male"> Male
+    </label>
+    
+    <label>
+      <input type="radio" name="sex" value="female"> Female
+    </label>
+  </fieldset>
+  
+  <div>
+    <label for="age">Age</label>
+    <input type="number" name="age" id="age">
+  </div>
+  
+  <div>
+    <fieldset>
+      <label>Belonging to any indigenous Peoples (IP) Community/Indigenous Cultural Community</label>
+      <label>
+        <input type="radio" name="is_ip" id="is_ip_yes" value="Yes"> Yes
+      </label>
+      <label>
+        <input type="radio" name="is_ip" id="is_ip_no" value="No" checked> No
+      </label>
+
+      <div id="ip_specify_wrapper" style="display: none;">
+        <label for="ip_specify">if Yes, please specify:</label>
+        <input type="text" name="ip_specify" id="ip_specify">
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <label>Is your family a beneficiary of 4Ps?</label>
+      <label>
+        <input type="radio" name="is_4ps" id="is_4ps_yes" value="Yes"> Yes
+      </label>
+      <label>
+        <input type="radio" name="is_4ps" id="is_4ps_no" value="No" checked> No
+      </label>
+
+      <div id="fourps_id_wrapper" style="display: none;">
+        <label for="fourps_id">if Yes, write the 4Ps Household ID Number below</label>
+        <input type="text" name="fourps_id" id="fourps_id">
+      </div>
+    </fieldset>
+  </div>
+
+  <div>
+    <label>Is the child a Learner with Disability?</label>
+    <label>
+      <input type="radio" name="with_disability" id="disability_yes" value="Yes"> Yes
+    </label>
+    <label>
+      <input type="radio" name="with_disability" id="disability_no" value="No" checked> No
+    </label>
+
+    <div id="disability_type_wrapper" style="display: none;">
+      <p>If Yes, specify the type of disability:</p>
+
+      <div>
+        <label><input type="checkbox" name="disability_type" value="Visual Impairment"> Visual Impairment</label>
+        <label><input type="checkbox" name="disability_type" value="Blind"> a. blind</label>
+        <label><input type="checkbox" name="disability_type" value="Low Vision"> b. low vision</label>
+        <label><input type="checkbox" name="disability_type" value="Multiple Disorder"> Multiple Disorder</label>
+      </div>
+
+      <div>
+        <label><input type="checkbox" name="disability_type" value="Hearing Impairment"> Hearing Impairment</label>
+        <label><input type="checkbox" name="disability_type" value="Autism Spectrum Disorder"> Autism Spectrum Disorder</label>
+        <label><input type="checkbox" name="disability_type" value="Speech/Language Disorder"> Speech/Language Disorder</label>
+      </div>
+
+      <div>
+        <label><input type="checkbox" name="disability_type" value="Learning Disability"> Learning Disability</label>
+        <label><input type="checkbox" name="disability_type" value="Emotional-Behavioral Disorder"> Emotional - Behavioral Disorder</label>          
+          <label><input type="checkbox" name="disability_type" value="Cerebral Palsy"> Cerebral Palsy</label>
+      </div>
+
+      <div>
+        <label><input type="checkbox" name="disability_type" value="Intellectual Disability"> Intellectual Disability</label>
+        <label><input type="checkbox" name="disability_type" value="Orthopedic/Physical Handicap"> Orthopedic/Physical Handicap</label>
+        <label><input type="checkbox" name="disability_type" value="Special Health Problem/Chronic Disease"> Special Health Problem/ Chronic Disease</label>
+        <label><input type="checkbox" name="disability_type" value="Cancer"> a. Cancer</label>        
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <h3>Current Address</h3>
+    <div>
+      <label for="current_house_no">House No.</label>
+      <input type="text" id="current_house_no" name="current_house_no">
+
+      <label for="current_street">Sitio/Street Name</label>
+      <input type="text" id="current_street" name="current_street">
+
+      <label for="current_barangay">Barangay</label>
+      <input type="text" id="current_barangay" name="current_barangay">
+    </div>
+
+    <div>
+      <label for="current_city">Municipality/City</label>
+      <input type="text" id="current_city" name="current_city">
+
+      <label for="current_province">Province</label>
+      <input type="text" id="current_province" name="current_province">
+
+      <label for="current_country">Country</label>
+      <input type="text" id="current_country" name="current_country">
+
+      <label for="current_zip">Zip Code</label>
+      <input type="text" id="current_zip" name="current_zip">
+    </div>
+  </div>
+
+  <div>
+      <h3>Permanent Address
+        <span style="font-weight: normal; font-style: italic;">Same with your Current Address?</span>
+        <label> 
+          <input type="radio" name="same_as_current" id="same_as_current_yes" value="Yes"> Yes
+        </label>
+        <label>
+          <input type="radio" name="same_as_current" id="same_as_current_no" value="No" checked> No
+        </label>
+      </h3>
+
+    <div>
+      <label for="permanent_house_no">House No./Street</label>
+      <input type="text" id="permanent_house_no" name="permanent_house_no">
+
+      <label for="permanent_street">Street Name</label>
+      <input type="text" id="permanent_street" name="permanent_street">
+
+      <label for="permanent_barangay">Barangay</label>
+      <input type="text" id="permanent_barangay" name="permanent_barangay">
+    </div>
+
+    <div>
+      <label for="permanent_city">Municipality/City</label>
+      <input type="text" id="permanent_city" name="permanent_city">
+
+      <label for="permanent_province">Province</label>
+      <input type="text" id="permanent_province" name="permanent_province">
+
+      <label for="permanent_country">Country</label>
+      <input type="text" id="permanent_country" name="permanent_country">
+
+      <label for="permanent_zip">Zip Code</label>
+      <input type="text" id="permanent_zip" name="permanent_zip">
+    </div>
+  </div>
+  
 
 
   <button type="submit" id="submitBtn">Submit</button>
