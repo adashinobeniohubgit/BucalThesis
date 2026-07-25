@@ -4,19 +4,86 @@
 <h1>Sample content</h1>
 <form method="POST" action="{{ url_for('main.enrollment') }}">
   <label for="schoolYear">School Year</label>
-  <input type="text" id="schoolYear" name="schoolYear" readonly>
+    <input type="text" id="schoolYear" name="schoolYear" readonly>
 
-  <label for="schoolGrade">Grade</label>
-  <select id="schoolGrade" name="schoolGrade" required>
-    <option value="" disabled selected>Select grade</option>
-    <option value="Kindergarten">Kindergarten</option>
-    <option value="1">Grade 1</option>
-    <option value="2">Grade 2</option>
-    <option value="3">Grade 3</option>
-    <option value="4">Grade 4</option>
-    <option value="5">Grade 5</option>
-    <option value="6">Grade 6</option>
-  </select>
+  <label for="schoolGrade">Grade level to Enroll</label>
+    <select id="schoolGrade" name="schoolGrade" required>
+      <option value="" disabled selected>Select grade</option>
+      <option value="Kindergarten">Kindergarten</option>
+      <option value="1">Grade 1</option>
+      <option value="2">Grade 2</option>
+      <option value="3">Grade 3</option>
+      <option value="4">Grade 4</option>
+      <option value="5">Grade 5</option>
+      <option value="6">Grade 6</option>
+    </select>
+  
+  <p>Check the appropriate box only:</p>
+  
+  <div>
+    <fieldset>
+      <legend>1. With LRN?</legend>
+        <label>
+          <input type="radio" name="has_lrn" value="Yes"> Yes
+        </label>
+    
+        <label>
+          <input type="radio" name="has_lrn" value="No"> No
+        </label>
+    </fieldset>
+
+    <fieldset>
+      <legend>2. Returning (Balik-Aral)</legend>
+        <label>
+          <input type="radio" name="is_returning" value="Yes"> Yes
+        </label>
+    
+        <label>
+          <input type="radio" name="is_returning" value="No"> No
+        </label>
+    </fieldset>
+  </div>
+  <h3>INSTRUCTIONS:</h3>
+  <p>Print legibly all information required in CAPITAL letters. Submit accomplished form to the Person-in-Charge/Registrar/Class Adviser. Use black or blue pen only.</p>
+  
+  <h1>LEARNER INFORMATION</h1>
+  <div>
+    <label for="psa_No">
+      PSA Birth Certificate No. (if available upon registration)
+    </label>
+    <input type="text" id="psa_No" name="psa_No">
+  </div>
+
+  <div>
+    <label for="lrn_No">
+      Learner Reference No. (LRN)
+    </label>
+    <input type="text" id="lrn_No" name="lrn_No" maxlength="12">
+  </div>
+
+  <div>
+    <fieldset>
+      <label for="last_name">
+        Last Name
+      </label>
+      <input type="text" id="last_name" name="last_name">
+
+      <label for="first_name">
+        First Name
+      </label>
+      <input type="text" id="first_name" name="first_name">
+
+      <label for="middle_name">
+        Middle Name
+      </label>
+      <input type="text" id="middle_name" name="middle_name">
+
+      <label for="extension_name">
+        Extension Name e.g. Jr. III (if applicable)
+      </label>
+      <input type="text" id="extension_name" name="extension_name">
+    </fieldset>
+  </div>
 
 
   <button type="submit" id="submitBtn">Submit</button>
