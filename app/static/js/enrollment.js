@@ -91,7 +91,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
   if (form) {
     form.addEventListener('submit', function (e) {
-      e.preventDefault();
 
       const formData = new FormData(form);
       const data = Object.fromEntries(formData.entries());
