@@ -1,106 +1,104 @@
 document.addEventListener('DOMContentLoaded', function () {
-  const today = new Date();
-  const year = today.getFullYear();
-  const month = today.getMonth() + 1;
-
-  const startYear = month < 7 ? year - 1 : year;
-  const schoolYear = `${startYear}-${startYear + 1}`;
-
-  document.getElementById('schoolYear').value = schoolYear;
-
-  function setupYesNoToggle(yesEl, noEl, wrapperEl) {
-    function updateVisibility() {
-      wrapperEl.style.display = yesEl.checked ? 'block' : 'none';
+    // ----------------------------------------------------
+    // 1. Auto-fill School Year (e.g., 2026-2027)
+    // ----------------------------------------------------
+    const schoolYearInput = document.getElementById('school_year');
+    if (schoolYearInput) {
+        const currentYear = new Date().getFullYear();
+        const nextYear = currentYear + 1;
+        schoolYearInput.value = `${currentYear}-${nextYear}`;
     }
 
-    yesEl.addEventListener('change', updateVisibility);
-    noEl.addEventListener('change', updateVisibility);
+    // ----------------------------------------------------
+    // 2. Auto-compute Age from Birthdate
+    // ----------------------------------------------------
+    const birthdateInput = document.getElementById('birthdate');
+    const ageInput = document.getElementById('age');
 
-    updateVisibility();
-  }
+    function calculateAge() {
+        if (!birthdateInput || !ageInput || !birthdateInput.value) return;
 
-  setupYesNoToggle(
-    document.getElementById('is_ip_yes'),
-    document.getElementById('is_ip_no'),
-    document.getElementById('ip_specify_wrapper')
-  );
+        const birthDate = new Date(birthdateInput.value);
+        
+        // Ensure valid date input
+        if (!isNaN(birthDate.getTime())) {
+            const today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
 
-  setupYesNoToggle(
-    document.getElementById('is_4ps_yes'),
-    document.getElementById('is_4ps_no'),
-    document.getElementById('fourps_id_wrapper')
-  );
+            // Subtract 1 if the birthday hasn't occurred yet this year
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
 
-  setupYesNoToggle(
-    document.getElementById('disability_yes'),
-    document.getElementById('disability_no'),
-    document.getElementById('disability_type_wrapper')
-  );
-
-  const addressFieldMap = {
-    current_house_no: 'permanent_house_no',
-    current_street: 'permanent_street',
-    current_barangay: 'permanent_barangay',
-    current_city: 'permanent_city',
-    current_province: 'permanent_province',
-    current_country: 'permanent_country',
-    current_zip: 'permanent_zip'
-  };
-
-  const sameYes = document.getElementById('same_as_current_yes');
-  const sameNo = document.getElementById('same_as_current_no');
-
-  function copyCurrentToPermanent() {
-    Object.entries(addressFieldMap).forEach(([currentId, permanentId]) => {
-      const currentEl = document.getElementById(currentId);
-      const permanentEl = document.getElementById(permanentId);
-      permanentEl.value = currentEl.value;
-      permanentEl.readOnly = true;
-    });
-  }
-
-  function unlockPermanentFields() {
-    Object.values(addressFieldMap).forEach((permanentId) => {
-      document.getElementById(permanentId).readOnly = false;
-    });
-  }
-
-  function updateAddressMode() {
-    if (sameYes.checked) {
-      copyCurrentToPermanent();
-    } else {
-      unlockPermanentFields();
+            ageInput.value = age >= 0 ? age : 0;
+        } else {
+            ageInput.value = '';
+        }
     }
-  }
 
-  sameYes.addEventListener('change', updateAddressMode);
-  sameNo.addEventListener('change', updateAddressMode);
+    if (birthdateInput) {
+        // Recalculate whenever the birthdate is changed
+        birthdateInput.addEventListener('change', calculateAge);
+        birthdateInput.addEventListener('input', calculateAge);
 
-  Object.keys(addressFieldMap).forEach((currentId) => {
-    document.getElementById(currentId).addEventListener('input', () => {
-      if (sameYes.checked) {
-        copyCurrentToPermanent();
-      }
-    });
-  });
+        // Run once on page load in case a date value is already pre-filled
+        calculateAge();
+    }
 
-  updateAddressMode();
 
-  const form = document.querySelector('form');
-  const submitBtn = document.getElementById('submitBtn');
+    // ====================================================
+    // 3. INDIGENOUS PEOPLES (IP) SPECIFY FIELD TOGGLE
+    // ====================================================
+    const ipYes = document.getElementById('ip_yes');
+    const ipNo = document.getElementById('ip_no');
+    const ipContainer = document.getElementById('ip_specify_container');
+    const ipInput = document.getElementById('ip_community');
 
-  if (form) {
-    form.addEventListener('submit', function (e) {
+    function toggleIpSpecify() {
+        if (!ipYes || !ipContainer || !ipInput) return;
 
-      const formData = new FormData(form);
-      const data = Object.fromEntries(formData.entries());
+        if (ipYes.checked) {
+            ipContainer.classList.remove('hidden');
+            ipInput.required = true;
+        } else {
+            ipContainer.classList.add('hidden');
+            ipInput.required = false;
+            ipInput.value = ''; // Clear value if reverted to 'No'
+        }
+    }
 
-      console.log('Form submitted:', data);
+    if (ipYes && ipNo) {
+        ipYes.addEventListener('change', toggleIpSpecify);
+        ipNo.addEventListener('change', toggleIpSpecify);
+        toggleIpSpecify(); // Run on load in case radio is pre-selected
+    }
 
-      if (submitBtn) {
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Submitting...';
-      }
-    });
-  }
+
+    // ====================================================
+    // 4. 4Ps BENEFICIARY TOGGLE
+    // ====================================================
+    const fourPsYes = document.getElementById('4ps_yes');
+    const fourPsNo = document.getElementById('4ps_no');
+    const fourPsContainer = document.getElementById('4ps_specify_container');
+    const fourPsInput = document.getElementById('4ps_id_no');
+
+    function toggle4psSpecify() {
+        if (!fourPsYes || !fourPsContainer || !fourPsInput) return;
+
+        if (fourPsYes.checked) {
+            fourPsContainer.classList.remove('hidden');
+            fourPsInput.required = true;
+        } else {
+            fourPsContainer.classList.add('hidden');
+            fourPsInput.required = false;
+            fourPsInput.value = ''; // Clear value if reverted to 'No'
+        }
+    }
+
+    if (fourPsYes && fourPsNo) {
+        fourPsYes.addEventListener('change', toggle4psSpecify);
+        fourPsNo.addEventListener('change', toggle4psSpecify);
+        toggle4psSpecify(); // Run on load in case pre-selected
+    }
 });
