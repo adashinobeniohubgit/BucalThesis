@@ -38,8 +38,8 @@
             <!-- With LRN and Returning -->
             <div>
                <label>1. With LRN?</label>
-               <label><input type="radio" name="has_lrn" value="yes" id="lrn_yes" required> Yes</label>
-               <label><input type="radio" name="has_lrn" value="no" id="lrn_no"> No</label>
+               <label><input type="radio" name="has_lrn" value="yes" id="has_lrn_yes" required> Yes</label>
+               <label><input type="radio" name="has_lrn" value="no" id="has_lrn_no"> No</label>
             </div>
             <div>
                <label>2. Returning (Balik-Aral)</label>
@@ -65,7 +65,11 @@
         <input type="text" name="psa_birth_cert_no" id="psa_birth_cert_no" placeholder="Enter PSA Birth Certificate Number">
         <!-- Learner Reference NO. -->
         <label for="lrn_no">Learner Reference No.</label>
-        <input type="text" name="lrn_no" id="lrn_no" placeholder="Enter Learner Reference Number" maxlength="12" pattern="[0-9]{12}" title="LRN must be exactly 12 digits." oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+        <input type="text" name="lrn_no" id="lrn_no" 
+            placeholder="Enter Learner Reference Number" 
+            maxlength="12" pattern="[0-9]{12}" 
+            title="LRN must be exactly 12 digits." 
+            oninput="this.value = this.value.replace(/[^0-9]/g, '')">
     </div>
 </div>
 <div>
@@ -106,15 +110,15 @@
         </div>
         <div>
             <!-- Belonging to any indigenous people -->
-            <p>Belongin to any Indigenous Peoples (IP) Community/Indigenous Cultural Community</p>
+            <p>Belonging to any Indigenous Peoples (IP) Community/Indigenous Cultural Community</p>
             <div>
                 <!-- Yes/ NO/ Specify -->
-                <label><input type="radio" name="is_ip" value="yes" id="ip_yes" required>Yes</label>
-                <label><input type="radio" name="is_ip" value="no" id="ip_no">No</label>
+                <label><input type="radio" name="is_ip" value="yes" id="ip_yes">Yes</label>
+                <label><input type="radio" name="is_ip" value="no" id="ip_no" checked>No</label>
 
-                <div id="ip_specify_container" class="hidden">
+                <div id="ip_specify_container">
                     <label for="ip_community">If Yes, please specify:</label>
-                    <input type="text" name="ip_community" id="ip_community" placeholder="e.g. Aeta, Mangyan, Tagbanwa">
+                    <input type="text" name="ip_community" id="ip_community" placeholder="e.g. Aeta, Mangyan, Tagbanwa" disabled>
                 </div>
             </div>
         </div>
@@ -122,18 +126,213 @@
             <div>
                 <!-- is your family 4ps? -->
                 <p>Is your family a beneficiary of 4Ps?</p>
-                <label><input type="radio" name="is_4ps" value="yes" id="4ps_yes" required> Yes</label>
-                <label><input type="radio" name="is_4ps" value="no" id="4ps_no"> No</label> 
+                <label><input type="radio" name="is_4ps" value="yes" id="4ps_yes"> Yes</label>
+                <label><input type="radio" name="is_4ps" value="no" id="4ps_no" checked> No</label> 
             </div>
-            <div id="4ps_specify_container" class="hidden">
+            <div id="4ps_specify_container">
                 <label for="4ps_id_no">If Yes, write the 4Ps Household ID Number below:</label>
-                <input type="text" name="4ps_id_no" id="4ps_id_no" placeholder="Enter 4Ps Household ID Number" maxlength="20">
+                <input type="text" name="4ps_id_no" id="4ps_id_no" placeholder="Enter 4Ps Household ID Number" maxlength="20" disabled>
             </div>
+        </div>
+    </div>
+</div>
+<div>
+    <div>
+        <!-- is the child with disability -->
+        <p>Is the child a Learner with Disability?</p>
+        <label>
+            <input type="radio" name="is_lwd" value="yes" id="lwd_yes">Yes
+        </label>
+        <label>
+            <input type="radio" name="is_lwd" value="no" id="lwd_no" checked>No
+        </label>
+    </div>
+    <div>
+        <!-- if yes, specify type of disability -->
+         <p>If Yes, specify the type of disability:</p>
+         <div>
+            <table>
+                <tr>
+                    <td class="align-top">
+                        <label>
+                            <input type="checkbox" name="disabilities" value="Visual Impairment" disabled> Visual Impairment
+                        </label>
+                        <br>
+                        <label>
+                            <input type="checkbox" name="disabilities" value="Visual Impairment - Blind" disabled> a. Blind
+                        </label>
+                        <br>
+                        <label>
+                            <input type="checkbox" name="disabilities" value="Visual Impairment - Low Vision" disabled> b. Low Vision
+                        </label>
+                        <br>
+                        <label>
+                            <input type="checkbox" name="disabilities" value="Multiple Disorder" disabled> Multiple Disorder
+                        </label>
+                    </td>
+                    <td class="align-top">
+                        <label>
+                            <input type="checkbox" name="disabilities" value="Hearing Impairment" disabled> Hearing Impairment
+                        </label>
+                        <br>
+                        <label>
+                            <input type="checkbox" name="disabilities" value="Autism Spectrum Disorder" disabled> Autism Spectrum Disorder
+                        </label>
+                        <br>
+                        <label>
+                            <input type="checkbox" name="disabilities" value="Speech/Language Disorder" disabled> Speech/Language Disorder
+                        </label>
+                    </td>
+                    <td class="align-top">
+                        <label>
+                            <input type="checkbox" name="disabilities" value="Learning Disability" disabled> Learning Disability
+                        </label>
+                        <br>
+                        <label>
+                            <input type="checkbox" name="disabilities" value="Emotional-Behavioral Disorder" disabled> Emotional-Behavioral Disorder
+                        </label>
+                        <br>
+                        <label>
+                            <input type="checkbox" name="disabilities" value="Cerebral Palsy" disabled> Cerebral Palsy
+                        </label>
+                    </td>
+                    <td class="align-top">
+                        <label>
+                            <input type="checkbox" name="disabilities" value="Intellectual Disability" disabled> Intellectual Disability
+                        </label>
+                        <br>
+                        <label>
+                            <input type="checkbox" name="disabilities" value="Orthopedic/Physical Handicap" disabled> Orthopedic/Physical Handicap
+                        </label>
+                        <br>
+                        <label>
+                            <input type="checkbox" name="disabilities" value="Special Health Problem/Chronic Disease" disabled> Special Health Problem/ Chronic Disease
+                        </label>
+                        <br>
+                        <label>
+                            <input type="checkbox" name="disabilities" value="Special Health Problem - Cancer" disabled> a. Cancer
+                        </label>
+                    </td>
+                </tr>
+            </table>
+         </div>
+    </div>
+</div>
+
+<div>
+    <div>
+        <!-- current address -->
+        <h3>Current Address</h3>
+        <label for="current_house_no">House No.:</label>
+        <input type="text" name="current_house_no" id="current_house_no" placeholder="House No.">
+        <label for="current_street_name">Sitio/Street Name:</label>
+        <input type="text" name="current_street_name" id="current_street_name" placeholder="Street">
+        <label for="current_barangay">Barangay:</label>
+        <input type="text" name="current_barangay" id="current_barangay" placeholder="Barangay">
+        <label for="current_municipality_city">Municipality/City:</label>
+        <input type="text" name="current_municipality_city" id="current_municipality_city" placeholder="Municipality/City">
+        <label for="current_province">Province:</label>
+        <input type="text" name="current_province" id="current_province" placeholder="Province">
+        <label for="current_country">Country:</label>
+        <input type="text" name="current_country" id="current_country" placeholder="Country">
+        <label for="current_zip_code">Zip Code:</label>
+        <input type="text" name="current_zip_code" id="current_zip_code" placeholder="Zip Code" maxlength="4" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+    </div>
+</div>
+<div>
+    <div>
+        <!-- same as current address yes/no -->
+        <h3>Permanent Address</h3>
+        <p>Same with your Current Address</p>
+        <label>
+            <input type="radio" name="same_address" value="yes" id="same_address_yes">Yes
+        </label>
+        <label>
+            <input type="radio" name="same_address" value="no" id="same_address_no" checked>No
+        </label>
+    </div>
+    <div>
+        <!-- permanent address -->
+        <h3>Permanent Address</h3>
+        <label for="perm_house_no">House No.:</label>
+        <input type="text" name="perm_house_no" id="perm_house_no" placeholder="House No.">
+        <label for="perm_street_name">Siti o/Street Name:</label>
+        <input type="text" name="perm_street_name" id="perm_street_name" placeholder="Street">
+        <label for="perm_barangay">Barangay:</label>
+        <input type="text" name="perm_barangay" id="perm_barangay" placeholder="Barangay">
+        <label for="perm_municipality_city">Municipality/City:</label>
+        <input type="text" name="perm_municipality_city" id="perm_municipality_city" placeholder="Municipality/City">
+        <label for="perm_province">Province:</label>
+        <input type="text" name="perm_province" id="perm_province" placeholder="Province">
+        <label for="perm_country">Country:</label>
+        <input type="text" name="perm_country" id="perm_country" placeholder="Country">
+        <label for="perm_zip_code">Zip Code:</label>
+        <input type="text" name="perm_zip_code" id="perm_zip_code" placeholder="Zip Code" maxlength="4" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+    </div>
+</div>
+
+<div>
+    <div>
+        <!-- parent guardian information -->
+    </div>
+    <div>
+        <!-- father name -->
+    </div>
+    <div>
+        <!-- mother name-->
+    </div>
+    <div>
+        <!-- legal guardian name -->
+    </div>
+</div>
+
+<div>
+    <div>
+        <!-- returning learner -->
+    </div>
+    <div>
+        <!-- last grade level, school, school year -->
+    </div>
+    <div>
+        <!-- school id -->
+    </div>
+</div>
+
+<div>
+    <div>
+        <!-- for learners in senior high school -->
+    </div>
+    <div>
+        <div>
+            <!-- semester -->
+        </div>
+        <div>
+            <!-- track/strand -->
+        </div>
+    </div>
+</div>
+
+<div>
+    <p>
+        <!-- if school will implement other distance learning modalities aside from face to face instruction... -->
+    </p>
+    <div>
+        <p>
+            <!-- choose that apply -->
+        </p>
+        <div>
+            <!-- choices -->
         </div>
     </div>
 </div>
 
 
+<div>
+    <!-- I hereby blah blah blah -->
+     <div>
+        <!-- signature and date -->
+     </div>
+</div>
 {% endblock %}
 
 {% block scripts %}

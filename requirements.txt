@@ -21,7 +21,7 @@ Werkzeug==3.1.8
 
 
 #If you ever feel like your output.css file is getting "stuck" or keeping ghost classes that you've deleted everywhere,
-#you can safely reset it by typing this in vs code terminal cmd:
+#or not working, you can safely reset it by typing this in vs code terminal cmd:
 #npm run dev
 
 
