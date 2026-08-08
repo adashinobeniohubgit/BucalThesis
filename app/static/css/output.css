@@ -184,9 +184,6 @@
   .block {
     display: block;
   }
-  .hidden {
-    display: none;
-  }
   .align-top {
     vertical-align: top;
   }
