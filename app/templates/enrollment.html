@@ -44,7 +44,7 @@
             <div>
                <label>2. Returning (Balik-Aral)</label>
                <label><input type="radio" name="is_returning" value="yes" id="returning_yes" required> Yes</label>
-               <label><input type="radio" name="is_returning" value="no" id="returning_no"> No</label>
+               <label><input type="radio" name="is_returning" value="no" id="returning_no" checked> No</label>
             </div>
         </div>
     </div>
@@ -256,7 +256,7 @@
         <h3>Permanent Address</h3>
         <label for="perm_house_no">House No.:</label>
         <input type="text" name="perm_house_no" id="perm_house_no" placeholder="House No.">
-        <label for="perm_street_name">Siti o/Street Name:</label>
+        <label for="perm_street_name">Sitio/Street Name:</label>
         <input type="text" name="perm_street_name" id="perm_street_name" placeholder="Street">
         <label for="perm_barangay">Barangay:</label>
         <input type="text" name="perm_barangay" id="perm_barangay" placeholder="Barangay">
@@ -324,25 +324,53 @@
 <div>
     <div>
         <!-- returning learner -->
+        <h3>For Returning Learner (Balik-Aral) and Those who will Transfer/Move in</h3>
     </div>
     <div>
         <!-- last grade level, school, school year -->
+        <label for="last_grade_completed">Last Grade Level Completed:</label>
+        <input type="text" name="last_grade_completed" id="last_grade_completed" 
+            maxlength="1" 
+            oninput="this.value = this.value.replace(/[^0-9]/g, '');" 
+            placeholder="e.g., 5" readonly>
+        <label for="last_school_year_completed">Last School Year Completed:</label>
+            <select name="last_school_year_completed" id="last_school_year_completed" disabled>
+                <option value="" disabled selected>Select School Year</option>
+            </select>
+        <label for="last_school_attended">Last School Attended:</label>
+        <input type="text" name="last_school_attended" id="last_school_attended" placeholder="e.g., Bucal II Elementary School" readonly>
     </div>
     <div>
         <!-- school id -->
+        <label for="school_id">School ID</label>
+        <input type="text" name="school_id" id="school_id"
+            inputmode="numeric" 
+            pattern="[0-9]*" 
+            maxlength="6" 
+            placeholder="123456" 
+            oninput="this.value = this.value.replace(/[^0-9]/g, '');"
+            readonly/>
     </div>
 </div>
 
 <div>
     <div>
         <!-- for learners in senior high school -->
+        <h3>For Learners in Senior High School</h3>
     </div>
     <div>
         <div>
             <!-- semester -->
+            <label>Semester</label>
+            <label><input type="radio" name="semester" value="first_semester" id="first_semester">1st Semester</label>
+            <label><input type="radio" name="semester" value="second_semester" id="second_semester">2nd Semester</label>
         </div>
         <div>
             <!-- track/strand -->
+            <label for="track">Track</label>
+            <input type="text" name="track" id="track" placeholder="Track">
+            <label for="strand">Strand</label>
+            <input type="text" name="Strand" id="Strand" placeholder="Strand">
         </div>
     </div>
 </div>
@@ -350,13 +378,51 @@
 <div>
     <p>
         <!-- if school will implement other distance learning modalities aside from face to face instruction... -->
+        If school will implement other distance learning modalities aside from face-to-face instruction, what would you prefer for your child?
     </p>
     <div>
         <p>
             <!-- choose that apply -->
+            Choose all that apply:
         </p>
         <div>
             <!-- choices -->
+            <table>
+                <tr>
+                    <td class="align-top">
+                        <label>
+                            <input type="checkbox" name="distance_learning_modalities" value="Modular (Print)"> Modular (Print)
+                        </label>
+                        <br>
+                        <label>
+                            <input type="checkbox" name="distance_learning_modalities" value="Modular (Digital)"> Modular (Digital)
+                        </label>
+                    </td>
+                    <td class="align-top">
+                        <label>
+                            <input type="checkbox" name="distance_learning_modalities" value="Online"> Online
+                        </label>
+                        <br>
+                        <label>
+                            <input type="checkbox" name="distance_learning_modalities" value="Educational Television"> Educational Television
+                        </label>
+                    </td>
+                    <td class="align-top">
+                        <label>
+                            <input type="checkbox" name="distance_learning_modalities" value="Radio-Based Instruction"> Radio-Based Instruction
+                        </label>
+                        <br>
+                        <label>
+                            <input type="checkbox" name="distance_learning_modalities" value="Homeschooling"> Homeschooling
+                        </label>
+                    </td>
+                    <td class="align-top">
+                        <label>
+                            <input type="checkbox" name="distance_learning_modalities" value="Blended"> Blended
+                        </label>
+                    </td>
+                </tr>
+            </table>
         </div>
     </div>
 </div>
@@ -364,9 +430,22 @@
 
 <div>
     <!-- I hereby blah blah blah -->
-     <div>
+    <p>
+        I hereby certify that the above information given are true and correct to the best of my knowledge and I allow the Department of Education to use my child's details to create and/or
+        update his/her learner profile in the Learner Information System. The information herein shall be treated as confidential in compliance with the Data Privacy Act of 2012.
+    </p>
+    <div>
         <!-- signature and date -->
-     </div>
+        <p>No signature attached</p>
+        <div>
+            <button>Sign Document</button>
+        </div>
+        <p>Signature Over Printed Name of Parent/Guardian</p>
+        <div>
+            <input type="text" id="date_answered" name="date_answered" readonly/>
+            <label for="date_answered">Date</label>
+        </div>
+    </div>
 </div>
 {% endblock %}
 

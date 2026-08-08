@@ -10,6 +10,41 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // ----------------------------------------------------
+    // 1.1 Populate "Last School Year Completed" Dropdown
+    // ----------------------------------------------------
+    const lastSchoolYearSelect = document.getElementById('last_school_year_completed');
+    if (lastSchoolYearSelect) {
+        const currentYear = new Date().getFullYear();
+        // Max completed school year ends at previous year (e.g., in 2026 -> 2024-2025)
+        const maxEndYear = currentYear - 1;
+        const minStartYear = 2001;
+
+        // Clear existing options except placeholder
+        lastSchoolYearSelect.innerHTML = '<option value="" disabled selected>Select School Year</option>';
+
+        for (let endYear = maxEndYear; endYear > minStartYear; endYear--) {
+            const startYear = endYear - 1;
+            const schoolYearText = `${startYear}-${endYear}`;
+
+            const option = document.createElement('option');
+            option.value = schoolYearText;
+            option.textContent = schoolYearText;
+
+            lastSchoolYearSelect.appendChild(option);
+        }
+    }
+
+    // ----------------------------------------------------
+    // 1.2 Auto-fill Date Answered (YYYY-MM-DD)
+    // ----------------------------------------------------
+    const dateAnsweredInput = document.getElementById('date_answered');
+    if (dateAnsweredInput) {
+        const today = new Date();
+        // Formats to YYYY-MM-DD
+        dateAnsweredInput.value = today.toISOString().split('T')[0];
+    }
+
+    // ----------------------------------------------------
     // 2. Auto-compute Age from Birthdate
     // ----------------------------------------------------
     const birthdateInput = document.getElementById('birthdate');
@@ -306,4 +341,64 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     });
+
+    // ====================================================
+    // 9. RETURNING LEARNER (BALIK-ARAL) FIELDS TOGGLE
+    // ====================================================
+    const returningYes = document.getElementById('returning_yes');
+    const returningNo = document.getElementById('returning_no');
+
+    // Text/number inputs use `readonly`; the <select> uses `disabled`
+    // since `readonly` has no effect on <select> elements in HTML.
+    const returningTextFieldIds = [
+        'last_grade_completed',
+        'last_school_attended',
+        'school_id'
+    ];
+    const returningSelectFieldIds = [
+        'last_school_year_completed'
+    ];
+
+    /**
+     * Toggles the returning-learner fields between editable/required
+     * and readonly/optional based on the "Returning (Balik-Aral)" answer.
+     *
+     * - "Yes" -> fields become editable and required
+     * - "No"  -> fields become readonly/disabled, cleared, and optional
+     */
+    function toggleReturningFields() {
+        if (!returningYes) return;
+
+        const isReturning = returningYes.checked;
+
+        returningTextFieldIds.forEach(id => {
+            const field = document.getElementById(id);
+            if (!field) return;
+
+            field.readOnly = !isReturning;
+            field.required = isReturning;
+
+            if (!isReturning) {
+                field.value = ''; // Clear stale input if user switches back to 'No'
+            }
+        });
+
+        returningSelectFieldIds.forEach(id => {
+            const field = document.getElementById(id);
+            if (!field) return;
+
+            field.disabled = !isReturning;
+            field.required = isReturning;
+
+            if (!isReturning) {
+                field.value = ''; // Reset to placeholder if user switches back to 'No'
+            }
+        });
+    }
+
+    if (returningYes && returningNo) {
+        returningYes.addEventListener('change', toggleReturningFields);
+        returningNo.addEventListener('change', toggleReturningFields);
+        toggleReturningFields(); // Run on load in case pre-selected
+    }
 });
