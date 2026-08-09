@@ -8,7 +8,7 @@
 <!--                                                                   -->
 <!--                                                                   -->
 
-
+<form action="{{ url_for('main.enrollment') }}" method="POST">
 <h1>Enrollment</h1>
 <div>
     <h1>BASIC EDUCATION ENROLLMENT FORM</h1>
@@ -285,7 +285,7 @@
         <input type="text" name="father_middle_name" id="father_middle_name" placeholder="Middle Name">
         <label for="father_contact_number">Contact Number</label>
         <input type="tel" name="father_contact_number" id="father_contact_number"
-            pattern="[0-9]{11}" 
+            pattern="[0-9]{4}-[0-9]{3}-[0-9]{4}" 
             title="Please enter an 11-digit mobile number" 
             placeholder="0912-345-6789">
     </div>
@@ -300,7 +300,7 @@
         <input type="text" name="mother_maiden_middle_name" id="mother_maiden_middle_name" placeholder="Middle Name">
         <label for="mother_maiden_contact_number">Contact Number</label>
         <input type="tel" name="mother_maiden_contact_number" id="mother_maiden_contact_number"
-            pattern="[0-9]{11}" 
+            pattern="[0-9]{4}-[0-9]{3}-[0-9]{4}" 
             title="Please enter an 11-digit mobile number" 
             placeholder="0912-345-6789">
     </div>
@@ -315,7 +315,7 @@
         <input type="text" name="legal_guardian_middle_name" id="legal_guardian_middle_name" placeholder="Middle Name">
         <label for="legal_guardian_contact_number">Contact Number</label>
         <input type="tel" name="legal_guardian_contact_number" id="legal_guardian_contact_number" 
-            pattern="[0-9]{11}" 
+            pattern="[0-9]{4}-[0-9]{3}-[0-9]{4}" 
             title="Please enter an 11-digit mobile number" 
             placeholder="0912-345-6789">
     </div>
@@ -370,7 +370,7 @@
             <label for="track">Track</label>
             <input type="text" name="track" id="track" placeholder="Track">
             <label for="strand">Strand</label>
-            <input type="text" name="Strand" id="Strand" placeholder="Strand">
+            <input type="text" name="strand" id="strand" placeholder="Strand">
         </div>
     </div>
 </div>
@@ -436,17 +436,37 @@
     </p>
     <div>
         <!-- signature and date -->
-        <p>No signature attached</p>
-        <div>
-            <button>Sign Document</button>
+        <!-- Main Form Signature Section -->
+        <div class="signature-section">
+        <label><strong>Signatory / Learner Signature</strong></label>
+        <div id="signature_preview" class="signature-preview-box">
+            <p>No signature attached</p>
         </div>
-        <p>Signature Over Printed Name of Parent/Guardian</p>
-        <div>
-            <input type="text" id="date_answered" name="date_answered" readonly/>
-            <label for="date_answered">Date</label>
+        <button type="button" id="open_sig_modal_btn" class="btn">Sign Document</button>
+        <input type="hidden" id="signature_data" name="signature_data" required />
+        </div>
+
+        <!-- Signature Modal Overlay -->
+        <div id="sig_modal" class="modal-overlay" style="display:none;">
+        <div class="modal-content">
+            <h3>Draw Your Signature</h3>
+            <canvas id="sig_canvas" width="400" height="180" style="touch-action: none; cursor: crosshair;"></canvas>
+            
+            <div class="modal-actions">
+            <button type="button" id="clear_sig_btn">Clear</button>
+            <button type="button" id="cancel_sig_btn">Cancel</button>
+            <button type="button" id="save_sig_btn" class="btn-primary">Adopt & Save</button>
+            </div>
+        </div>
         </div>
     </div>
 </div>
+
+<div style="margin-top: 20px;">
+    <button type="submit" class="btn btn-primary">Submit Enrollment</button>
+</div>
+
+</form>
 {% endblock %}
 
 {% block scripts %}

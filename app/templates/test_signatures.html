@@ -1,0 +1,23 @@
+{% extends 'dashboard.html' %}
+
+{% block content %}
+<h1>Signature Test Page</h1>
+
+<div>
+    {% if not enrollments %}
+        <p>No enrollment records found yet.</p>
+    {% endif %}
+
+    {% for e in enrollments %}
+        <div style="border:1px solid #ccc; padding:10px; margin-bottom:15px;">
+            <p><strong>ID:</strong> {{ e.id }} — {{ e.last_name }}, {{ e.first_name }}</p>
+
+            {% if e.signature_data %}
+                <img src="{{ e.signature_data }}" alt="Signature" style="max-width:300px; border:1px solid #999;">
+            {% else %}
+                <p><em>No signature saved for this record.</em></p>
+            {% endif %}
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}
