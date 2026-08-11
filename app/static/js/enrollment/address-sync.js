@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const sameAddressYes = document.getElementById('same_address_yes');
     const sameAddressNo = document.getElementById('same_address_no');
 
-    // Field mapping array: [Current ID, Permanent ID]
     const addressFields = [
         ['current_house_no', 'perm_house_no'],
         ['current_street_name', 'perm_street_name'],
@@ -28,11 +27,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (currInput && permInput) {
                 if (isSame) {
-                    // Copy value and set to readonly
                     permInput.value = currInput.value;
                     permInput.readOnly = true;
                 } else {
-                    // Enable editing
                     permInput.readOnly = false;
                 }
             }
@@ -44,7 +41,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         sameAddressNo.addEventListener('change', function() {
             syncAddress();
-            // Clear permanent fields when user switches back to 'No'
             addressFields.forEach(([_, permId]) => {
                 const permInput = document.getElementById(permId);
                 if (permInput) {
@@ -53,7 +49,6 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         });
 
-        // Real-time listener: updates permanent fields live if user types in Current Address while 'Yes' is selected
         addressFields.forEach(([currId, _]) => {
             const currInput = document.getElementById(currId);
             if (currInput) {
@@ -65,7 +60,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
-        // Run once on load in case 'Yes' is pre-selected
         syncAddress();
     }
 

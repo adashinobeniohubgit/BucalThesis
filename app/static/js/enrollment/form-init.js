@@ -16,11 +16,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const lastSchoolYearSelect = document.getElementById('last_school_year_completed');
     if (lastSchoolYearSelect) {
         const currentYear = new Date().getFullYear();
-        // Max completed school year ends at previous year (e.g., in 2026 -> 2024-2025)
         const maxEndYear = currentYear - 1;
         const minStartYear = 2001;
 
-        // Clear existing options except placeholder
         lastSchoolYearSelect.innerHTML = '<option value="" disabled selected>Select School Year</option>';
 
         for (let endYear = maxEndYear; endYear > minStartYear; endYear--) {
@@ -55,15 +53,13 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!birthdateInput || !ageInput || !birthdateInput.value) return;
 
         const [y, m, d] = birthdateInput.value.split('-').map(Number);
-        const birthDate = new Date(y, m - 1, d); // constructed in local time, no UTC shift
+        const birthDate = new Date(y, m - 1, d);
 
-        // Ensure valid date input
         if (!isNaN(birthDate.getTime())) {
             const today = new Date();
             let age = today.getFullYear() - birthDate.getFullYear();
             const monthDiff = today.getMonth() - birthDate.getMonth();
 
-            // Subtract 1 if the birthday hasn't occurred yet this year
             if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
                 age--;
             }
@@ -75,11 +71,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     if (birthdateInput) {
-        // Recalculate whenever the birthdate is changed
         birthdateInput.addEventListener('change', calculateAge);
         birthdateInput.addEventListener('input', calculateAge);
 
-        // Run once on page load in case a date value is already pre-filled
         calculateAge();
     }
 

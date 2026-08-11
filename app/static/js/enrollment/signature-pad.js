@@ -2,7 +2,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // ====================================================
     // 10. SIGNATURE MODAL & CANVAS DRAWING LOGIC
-    // (Supports XP-Pen Tablet, Mouse, and Mobile Touch via Pointer Events)
     // ====================================================
     const openSigBtn = document.getElementById('open_sig_modal_btn');
     const sigModal = document.getElementById('sig_modal');
@@ -17,7 +16,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const ctx = canvas.getContext('2d');
         let isDrawing = false;
 
-        // Reset brush properties
         function resetCanvasContext() {
             ctx.strokeStyle = '#000000';
             ctx.lineWidth = 2;
@@ -25,10 +23,9 @@ document.addEventListener('DOMContentLoaded', function () {
             ctx.lineJoin = 'round';
         }
 
-        // Open & Close Modal
         openSigBtn.addEventListener('click', () => {
             sigModal.style.display = 'flex';
-            ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear previous drawing
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
             resetCanvasContext();
         });
 
@@ -43,7 +40,6 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
 
-        // Accurately calculates coordinates even if canvas is scaled via CSS
         function getPos(e) {
             const rect = canvas.getBoundingClientRect();
             const scaleX = canvas.width / rect.width;
@@ -55,10 +51,9 @@ document.addEventListener('DOMContentLoaded', function () {
             };
         }
 
-        // Pointer Events (Handles Pen/Stylus, Mouse, and Touch)
         canvas.addEventListener('pointerdown', (e) => {
             isDrawing = true;
-            canvas.setPointerCapture(e.pointerId); // Tracks drawing even if cursor briefly slips outside canvas
+            canvas.setPointerCapture(e.pointerId);
             ctx.beginPath();
             const p = getPos(e);
             ctx.moveTo(p.x, p.y);
@@ -68,7 +63,6 @@ document.addEventListener('DOMContentLoaded', function () {
             if (isDrawing) {
                 const p = getPos(e);
 
-                // Optional pressure sensitivity support for XP-Pen
                 if (e.pointerType === 'pen' && e.pressure) {
                     ctx.lineWidth = Math.max(1, e.pressure * 5);
                 }
@@ -83,13 +77,11 @@ document.addEventListener('DOMContentLoaded', function () {
             canvas.releasePointerCapture(e.pointerId);
         });
 
-        // Save Signature as Base64 Image string
         if (saveSigBtn) {
             saveSigBtn.addEventListener('click', () => {
                 const dataUrl = canvas.toDataURL('image/png');
                 if (sigInput) sigInput.value = dataUrl; // Store in hidden input for PHP submit
 
-                // Update Preview in Main Form
                 if (sigPreview) {
                     sigPreview.innerHTML = `<img src="${dataUrl}" alt="Signature Preview" style="max-width:100%; height:auto;" />`;
                 }
