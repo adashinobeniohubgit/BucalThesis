@@ -7,22 +7,7 @@ greenlet==3.5.3
 itsdangerous==2.2.0
 Jinja2==3.1.6
 MarkupSafe==3.0.3
+PyMySQL==1.2.0
 SQLAlchemy==2.0.51
 typing_extensions==4.15.0
 Werkzeug==3.1.8
-
-
-#FOLLOW THIS STEPS AFTER PULLING THE REPO
-#1. Create a virtual environment (python -m venv env/ py -m venv env)
-#2. Activate the virtual environment (.\env\Scripts\activate)
-#3. Install the dependencies (pip install -r requirements.txt)
-#4. Install pymysql (pip install pymysql)
-#Done
-
-
-#If you ever feel like your output.css file is getting "stuck" or keeping ghost classes that you've deleted everywhere,
-#or not working, you can safely reset it by typing this in vs code terminal cmd:
-#npm run dev
-
-
-#P.S follow the standard file/folder name management and structure for the project. (see flask documentation online for reference)
