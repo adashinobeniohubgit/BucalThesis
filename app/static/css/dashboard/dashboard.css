@@ -1,0 +1,39 @@
+.sidebar {
+    width: 15%;
+    min-width: 200px;
+}
+.main-content {
+    width: 85%;
+    margin-left: 15%;
+}
+.sidebar .nav-link {
+    color: rgba(255, 255, 255, 0.75);
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
+}
+.sidebar .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+}
+.sidebar .nav-link.active {
+    background-color: #0d6efd;
+    color: #ffffff;
+}
+
+
+@media (max-width: 768px) {
+
+.sidebar {
+    width: 100%;
+    min-width: 0;
+    position: relative;
+    height: auto;
+}
+
+.main-content {
+    width: 100%;
+    margin-left: 0;
+}
+
+}

@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Login - School Management System</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap/bootstrap.min.css')}}">
 </head>
 <body>
 
@@ -35,9 +36,10 @@
 
             <br>
 
-            <button type="submit">Sign In</button>
+            <button type="submit" class="btn btn-primary">Sign In</button>
         </form>
     </div>
 
+    <script src="{{ url_for('static', filename='js/bootstrap/bootstrap.bundle.min.js') }}"></script>
 </body>
 </html>
