@@ -9,51 +9,80 @@
 <!--                                                                   -->
 
 <form action="{{ url_for('main.enrollment') }}" method="POST">
-<h1>Enrollment</h1>
-<div>
-    <h1>BASIC EDUCATION ENROLLMENT FORM</h1>
-</div>
-<div>
-    <div>
-        <!-- School year and Grade level to Enroll -->
-        <label for="school_year">School Year</label>
-        <input type="text" id="school_year" name="school_year" readonly>
-        <label for="grade_level">Grade Level to Enroll:</label>
-            <select id="grade_level" name="grade_level" required>
-                <option value="" disabled selected>-- Select Grade Level --</option>
-                <option value="Kindergarten">Kindergarten</option>
-                <option value="Grade_1">Grade 1</option>
-                <option value="Grade_2">Grade 2</option>
-                <option value="Grade_3">Grade 3</option>
-                <option value="Grade_4">Grade 4</option>
-                <option value="Grade_5">Grade 5</option>
-                <option value="Grade_6">Grade 6</option>
-            </select>
+<div class="d-flex align-items-center justify-content-center gap-4 py-4 border-bottom mb-4">
+    <img src="{{ url_for('static', filename='images/DepedLogo.webp') }}" alt="DepEd Logo" style="height: 90px; width: auto;">
+    <div class="text-center">
+        <h3 class="fw-bold mb-1" style="letter-spacing: 0.5px;">BASIC EDUCATION ENROLLMENT FORM</h3>
+        <p class="mb-0 text-muted small">THIS FORM IS NOT FOR SALE.</p>
     </div>
-    <div>
-        <div>
-            <p>Check the appropriate box only</p>
-        </div>
-        <div>
-            <!-- With LRN and Returning -->
-            <div>
-               <label>1. With LRN?</label>
-               <label><input type="radio" name="has_lrn" value="yes" id="has_lrn_yes" required> Yes</label>
-               <label><input type="radio" name="has_lrn" value="no" id="has_lrn_no"> No</label>
+</div>
+<div class="row g-3 mb-4">
+    <!-- School year and Grade level to Enroll -->
+    <div class="col-md-5">
+        <div class="border rounded p-3 h-100">
+            <div class="d-flex align-items-center mb-3">
+                <label for="school_year" class="me-3 fw-semibold" style="min-width: 110px;">School Year</label>
+                <input type="text" id="school_year" name="school_year" readonly
+                       class="form-control form-control-sm text-center fw-bold"
+                       style="max-width: 100px;">
             </div>
-            <div>
-               <label>2. Returning (Balik-Aral)</label>
-               <label><input type="radio" name="is_returning" value="yes" id="returning_yes" required> Yes</label>
-               <label><input type="radio" name="is_returning" value="no" id="returning_no" checked> No</label>
+            <div class="d-flex align-items-center">
+                <label for="grade_level" class="me-3 fw-semibold" style="min-width: 110px;">Grade level to Enroll:</label>
+                <select id="grade_level" name="grade_level" required class="form-select form-select-sm" style="max-width: 200px;">
+                    <option value="" disabled selected>-- Select Grade Level --</option>
+                    <option value="Kindergarten">Kindergarten</option>
+                    <option value="Grade_1">Grade 1</option>
+                    <option value="Grade_2">Grade 2</option>
+                    <option value="Grade_3">Grade 3</option>
+                    <option value="Grade_4">Grade 4</option>
+                    <option value="Grade_5">Grade 5</option>
+                    <option value="Grade_6">Grade 6</option>
+                </select>
             </div>
         </div>
     </div>
+    <div class="col-md-7">
+        <!-- With LRN and Returning -->
+        <div class="border rounded p-3 h-100">
+            <p class="fw-semibold mb-2">Check the appropriate box only</p>
+
+            <div class="d-flex flex-wrap align-items-center gap-4">
+                <div class="d-flex align-items-center gap-2">
+                    <span class="fw-semibold">1. With LRN?</span>
+                    <div class="form-check form-check-inline mb-0">
+                        <input class="form-check-input" type="radio" name="has_lrn" value="yes" id="has_lrn_yes" required>
+                        <label class="form-check-label" for="has_lrn_yes">Yes</label>
+                    </div>
+                    <div class="form-check form-check-inline mb-0">
+                        <input class="form-check-input" type="radio" name="has_lrn" value="no" id="has_lrn_no">
+                        <label class="form-check-label" for="has_lrn_no">No</label>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-center gap-2">
+                    <span class="fw-semibold">2. Returning (Balik-Aral)</span>
+                    <div class="form-check form-check-inline mb-0">
+                        <input class="form-check-input" type="radio" name="is_returning" value="yes" id="returning_yes" required>
+                        <label class="form-check-label" for="returning_yes">Yes</label>
+                    </div>
+                    <div class="form-check form-check-inline mb-0">
+                        <input class="form-check-input" type="radio" name="is_returning" value="no" id="returning_no" checked>
+                        <label class="form-check-label" for="returning_no">No</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-<div>
+
+<div class="mb-4">
     <!-- Instructions -->
-    <h2>INSTRUCTIONS:</h2>
-    <p>Print legibly of information required in CAPITAL letters. Submit accomplished form to the Person-Charge/Registrar/Class Adviser. Use black or blue pen only</p>
+    <p class="fw-bold mb-1 text-uppercase">Instructions:</p>
+    <p class="fst-italic ps-4 mb-0">
+        (To be edited)Print legibly all information required in CAPITAL letters. Submit accomplished form to the Person-in-Charge/Registrar/Class Adviser. Use black or blue pen only.
+    </p>
 </div>
+
 <div>
     <div>
         <!-- Learner Information -->
