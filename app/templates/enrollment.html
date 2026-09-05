@@ -84,168 +84,232 @@
 </div>
 
 <div>
-    <div>
+    <div class="section-title-bar text-center border-top border-bottom border-dark py-1 my-2">
         <!-- Learner Information -->
-         <h1>LEARNER INFORMATION</h1>
+        <h5>LEARNER INFORMATION</h5>
     </div>
-    <div>
-        <!-- PSA Birth Cert No. -->
-        <label for="psa_birth_cert_no">PSA Birth Certificate No. (If available upon registration)</label>
-        <input type="text" name="psa_birth_cert_no" id="psa_birth_cert_no" placeholder="Enter PSA Birth Certificate Number">
-        <!-- Learner Reference NO. -->
-        <label for="lrn_no">Learner Reference No.</label>
-        <input type="text" name="lrn_no" id="lrn_no" 
-            placeholder="Enter Learner Reference Number" 
-            maxlength="12" pattern="[0-9]{12}" 
-            title="LRN must be exactly 12 digits." 
-            oninput="this.value = this.value.replace(/[^0-9]/g, '')">
-    </div>
-</div>
-<div>
-    <div>
-        <!-- Last Name -->
-        <label for="last_name">Last Name:</label>
-        <input type="text" name="last_name" id="last_name" required>
-        <!-- First Name -->
-        <label for="first_name">First Name:</label>
-        <input type="text" name="first_name" id="first_name" required>
-        <!-- Middle Name -->
-        <label for="middle_name">Middle Name:</label>
-        <input type="text" name="middle_name" id="middle_name" required>
-        <!-- Extension Name -->
-        <label for="extension_name">Extension Name e.g Jr, III (If applicable)</label>
-        <input type="text" name="extension_name" id="extension_name">
-    </div>
-    <div>
-        <div>
-            <!-- Birthdate -->
-            <label for="birthdate">Birthdate:</label>
-            <input type="date" name="birthdate" id="birthdate" required>
-            <!-- Place of Birth -->
-            <label for="birth_place">Place of Birth (Municipality/City):</label>
-            <input type="text" name="birth_place" id="birth_place" required>
+    <div class="row g-3 mb-3">
+        <div class="col-md-7">
+            <!-- PSA Birth Cert No. -->
+            <label for="psa_birth_cert_no" class="form-label small mb-1">PSA Birth Certificate No. (if available upon registration)</label>
+            <input type="text" name="psa_birth_cert_no" id="psa_birth_cert_no"
+                   class="form-control border-0 border-bottom rounded-0"
+                   placeholder="Enter PSA Birth Certificate Number">
         </div>
-        <div>
-            <!-- Sex -->
-            <label>Sex:</label>
-            <label><input type="radio" name="sex" id="sex_male" value="male" required>Male</label>
-            <label><input type="radio" name="sex" id="sex_female" value="female">Female</label>
-            <!-- Age -->
-            <label for="age">Age:</label>
-            <input type="number" name="age" id="age" placeholder="Auto-calculated" readonly required>
-            <!-- Mother Tongue -->
-            <label for="mother_tongue">Mother Tongue:</label>
-            <input type="text" name="mother_tongue" id="mother_tongue" placeholder="e.g. Filipino, Cebuano, Ilokano" required>
+        <div class="col-md-5">
+            <!-- Learner Reference NO. -->
+            <label for="lrn_no" class="form-label small mb-1">Learner Reference No.</label>
+            <input type="text" name="lrn_no" id="lrn_no"
+                   class="form-control cell-input"
+                   maxlength="12" pattern="[0-9]{12}"
+                   title="LRN must be exactly 12 digits."
+                   oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                   placeholder="Enter Learner Reference Number">
         </div>
-        <div>
-            <!-- Belonging to any indigenous people -->
-            <p>Belonging to any Indigenous Peoples (IP) Community/Indigenous Cultural Community</p>
-            <div>
-                <!-- Yes/ NO/ Specify -->
-                <label><input type="radio" name="is_ip" value="yes" id="ip_yes">Yes</label>
-                <label><input type="radio" name="is_ip" value="no" id="ip_no" checked>No</label>
+    </div>
 
-                <div id="ip_specify_container">
-                    <label for="ip_community">If Yes, please specify:</label>
-                    <input type="text" name="ip_community" id="ip_community" placeholder="e.g. Aeta, Mangyan, Tagbanwa" disabled>
+    <div class="row g-3">
+        <div class="col-md-7">
+            <div class="mb-3">
+                <!-- Last Name -->
+                <label for="last_name" class="form-label small mb-1">(LRN) Last Name</label>
+                <input type="text" name="last_name" id="last_name" required class="form-control cell-input" placeholder="Last Name">
+            </div>
+            <div class="mb-3">
+                <!-- First Name -->
+                <label for="first_name" class="form-label small mb-1">First Name</label>
+                <input type="text" name="first_name" id="first_name" required class="form-control cell-input" placeholder="First Name">
+            </div>
+            <div class="mb-3">
+                <!-- Middle Name -->
+                <label for="middle_name" class="form-label small mb-1">Middle Name</label>
+                <input type="text" name="middle_name" id="middle_name" required class="form-control cell-input" placeholder="Middle Name">
+            </div>
+            <div class="mb-3">
+                <!-- Extension Name -->
+                <label for="extension_name" class="form-label small mb-1">Extension Name e.g. Jr., III (if applicable)</label>
+                <input type="text" name="extension_name" id="extension_name" class="form-control cell-input" style="max-width: 250px;" placeholder="Extension Name">
+            </div>
+        </div>
+
+        <div class="col-md-5">
+            <div class="row g-2 mb-3">
+                <div class="col-6">
+                    <!-- Birthdate -->
+                    <label for="birthdate" class="form-label small mb-1">Birthdate (mm/dd/yyyy)</label>
+                    <input type="date" name="birthdate" id="birthdate" required class="form-control">
+                </div>
+                <div class="col-6">
+                    <!-- Place of Birth -->
+                    <label for="birth_place" class="form-label small mb-1">Place of Birth (Municipality/City)</label>
+                    <input type="text" name="birth_place" id="birth_place" required class="form-control" placeholder="Municipality/City">
                 </div>
             </div>
-        </div>
-        <div>
-            <div>
-                <!-- is your family 4ps? -->
-                <p>Is your family a beneficiary of 4Ps?</p>
-                <label><input type="radio" name="is_4ps" value="yes" id="4ps_yes"> Yes</label>
-                <label><input type="radio" name="is_4ps" value="no" id="4ps_no" checked> No</label> 
+
+            <div class="row g-2 mb-3">
+                <div class="col-6">
+                    <div class="row g-1">
+                        <div class="col-7">
+                            <!-- Sex -->
+                            <p class="form-label small mb-1">Sex</p>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="sex" id="sex_male" value="male" required>
+                                <label class="form-check-label" for="sex_male">Male</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="sex" id="sex_female" value="female">
+                                <label class="form-check-label" for="sex_female">Female</label>
+                            </div>
+                        </div>
+                        <div class="col-5">
+                            <!-- Age -->
+                            <label for="age" class="form-label small mb-1">Age</label>
+                            <input type="number" name="age" id="age" placeholder="Auto" readonly required class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <label for="mother_tongue" class="form-label small mb-1">Mother Tongue</label>
+                    <input type="text" name="mother_tongue" id="mother_tongue" required class="form-control"
+                            placeholder="e.g. Filipino, Cebuano, Ilokano">
+                </div>
             </div>
-            <div id="4ps_specify_container">
-                <label for="4ps_id_no">If Yes, write the 4Ps Household ID Number below:</label>
-                <input type="text" name="4ps_id_no" id="4ps_id_no" placeholder="Enter 4Ps Household ID Number" maxlength="20" disabled>
+
+            <div class="mb-3">
+                <p class="small mb-1">Belonging to any Indigenous Peoples (IP) Community/Indigenous Cultural Community</p>
+                <div class="d-flex align-items-center gap-3">
+                    <div class="form-check form-check-inline mb-0">
+                        <input class="form-check-input" type="radio" name="is_ip" value="yes" id="ip_yes">
+                        <label class="form-check-label" for="ip_yes">Yes</label>
+                    </div>
+                    <div class="form-check form-check-inline mb-0">
+                        <input class="form-check-input" type="radio" name="is_ip" value="no" id="ip_no" checked>
+                        <label class="form-check-label" for="ip_no">No</label>
+                    </div>
+                    <div id="ip_specify_container" class="flex-grow-1 d-flex align-items-center gap-2">
+                        <label for="ip_community" class="small mb-0 text-nowrap">If Yes, specify:</label>
+                        <input type="text" name="ip_community" id="ip_community"
+                            class="form-control form-control-sm border-0 border-bottom rounded-0"
+                            placeholder="e.g. Aeta, Mangyan, Tagbanwa" disabled>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="d-flex align-items-center gap-3 mb-2">
+                    <p class="small mb-1">Is your family a beneficiary of 4Ps?</p>
+                    <div class="form-check form-check-inline mb-0">
+                        <input class="form-check-input" type="radio" name="is_4ps" value="yes" id="4ps_yes">
+                        <label class="form-check-label" for="4ps_yes">Yes</label>
+                    </div>
+                    <div class="form-check form-check-inline mb-0">
+                        <input class="form-check-input" type="radio" name="is_4ps" value="no" id="4ps_no" checked>
+                        <label class="form-check-label" for="4ps_no">No</label>
+                    </div>
+                </div>
+                <label for="4ps_id_no" class="small mb-1">If Yes, write the 4Ps Household ID Number below</label>
+                <input type="text" name="4ps_id_no" id="4ps_id_no"
+                        class="form-control cell-input" maxlength="20" 
+                        placeholder="Enter 4Ps Household ID Number" disabled>
             </div>
         </div>
     </div>
 </div>
-<div>
-    <div>
-        <!-- is the child with disability -->
-        <p>Is the child a Learner with Disability?</p>
-        <label>
-            <input type="radio" name="is_lwd" value="yes" id="lwd_yes">Yes
-        </label>
-        <label>
-            <input type="radio" name="is_lwd" value="no" id="lwd_no" checked>No
-        </label>
+
+<div class="border p-3">
+    <!-- Question Header with Inline Radios -->
+    <div class="d-flex align-items-center gap-3 mb-2">
+        <span class="fw-bold small me-2">Is the child a Learner with Disability?</span>
+        <div class="form-check form-check-inline mb-0">
+            <input class="form-check-input" type="radio" name="is_lwd" id="lwd_yes" value="yes">
+            <label class="form-check-label small" for="lwd_yes">Yes</label>
+        </div>
+        <div class="form-check form-check-inline mb-0">
+            <input class="form-check-input" type="radio" name="is_lwd" id="lwd_no" value="no" checked>
+            <label class="form-check-label small" for="lwd_no">No</label>
+        </div>
     </div>
-    <div>
-        <!-- if yes, specify type of disability -->
-         <p>If Yes, specify the type of disability:</p>
-         <div>
-            <table>
-                <tr>
-                    <td class="align-top">
-                        <label>
-                            <input type="checkbox" name="disabilities" value="Visual Impairment" disabled> Visual Impairment
-                        </label>
-                        <br>
-                        <label>
-                            <input type="checkbox" name="disabilities" value="Visual Impairment - Blind" disabled> a. Blind
-                        </label>
-                        <br>
-                        <label>
-                            <input type="checkbox" name="disabilities" value="Visual Impairment - Low Vision" disabled> b. Low Vision
-                        </label>
-                        <br>
-                        <label>
-                            <input type="checkbox" name="disabilities" value="Multiple Disorder" disabled> Multiple Disorder
-                        </label>
-                    </td>
-                    <td class="align-top">
-                        <label>
-                            <input type="checkbox" name="disabilities" value="Hearing Impairment" disabled> Hearing Impairment
-                        </label>
-                        <br>
-                        <label>
-                            <input type="checkbox" name="disabilities" value="Autism Spectrum Disorder" disabled> Autism Spectrum Disorder
-                        </label>
-                        <br>
-                        <label>
-                            <input type="checkbox" name="disabilities" value="Speech/Language Disorder" disabled> Speech/Language Disorder
-                        </label>
-                    </td>
-                    <td class="align-top">
-                        <label>
-                            <input type="checkbox" name="disabilities" value="Learning Disability" disabled> Learning Disability
-                        </label>
-                        <br>
-                        <label>
-                            <input type="checkbox" name="disabilities" value="Emotional-Behavioral Disorder" disabled> Emotional-Behavioral Disorder
-                        </label>
-                        <br>
-                        <label>
-                            <input type="checkbox" name="disabilities" value="Cerebral Palsy" disabled> Cerebral Palsy
-                        </label>
-                    </td>
-                    <td class="align-top">
-                        <label>
-                            <input type="checkbox" name="disabilities" value="Intellectual Disability" disabled> Intellectual Disability
-                        </label>
-                        <br>
-                        <label>
-                            <input type="checkbox" name="disabilities" value="Orthopedic/Physical Handicap" disabled> Orthopedic/Physical Handicap
-                        </label>
-                        <br>
-                        <label>
-                            <input type="checkbox" name="disabilities" value="Special Health Problem/Chronic Disease" disabled> Special Health Problem/ Chronic Disease
-                        </label>
-                        <br>
-                        <label>
-                            <input type="checkbox" name="disabilities" value="Special Health Problem - Cancer" disabled> a. Cancer
-                        </label>
-                    </td>
-                </tr>
-            </table>
-         </div>
-    </div>
+
+    <!-- Sub-label -->
+    <p class="fw-bold small mb-2">If Yes, specify the type of disability:</p>
+
+    <!-- Disability Options Grid -->
+    <table class="table table-borderless table-sm mb-0">
+        <tbody>
+            <tr>
+                <!-- Column 1 -->
+                <td class="align-top ps-4" style="width: 25%;">
+                    <div class="form-check mb-1">
+                        <input class="form-check-input" type="checkbox" name="disabilities" value="Visual Impairment" id="dis_visual" disabled>
+                        <label class="form-check-label small" for="dis_visual">Visual Impairment</label>
+                    </div>
+                    <div class="form-check mb-1 ms-3">
+                        <input class="form-check-input" type="checkbox" name="disabilities" value="Visual Impairment - Blind" id="dis_blind" disabled>
+                        <label class="form-check-label small" for="dis_blind">a. blind</label>
+                    </div>
+                    <div class="form-check mb-1 ms-3">
+                        <input class="form-check-input" type="checkbox" name="disabilities" value="Visual Impairment - Low Vision" id="dis_low_vision" disabled>
+                        <label class="form-check-label small" for="dis_low_vision">b. low vision</label>
+                    </div>
+                    <div class="form-check mb-1 mt-2">
+                        <input class="form-check-input" type="checkbox" name="disabilities" value="Multiple Disorder" id="dis_multiple" disabled>
+                        <label class="form-check-label small" for="dis_multiple">Multiple Disorder</label>
+                    </div>
+                </td>
+
+                <!-- Column 2 -->
+                <td class="align-top" style="width: 25%;">
+                    <div class="form-check mb-1">
+                        <input class="form-check-input" type="checkbox" name="disabilities" value="Hearing Impairment" id="dis_hearing" disabled>
+                        <label class="form-check-label small" for="dis_hearing">Hearing Impairment</label>
+                    </div>
+                    <div class="form-check mb-1">
+                        <input class="form-check-input" type="checkbox" name="disabilities" value="Autism Spectrum Disorder" id="dis_autism" disabled>
+                        <label class="form-check-label small" for="dis_autism">Autism Spectrum Disorder</label>
+                    </div>
+                    <div class="form-check mb-1">
+                        <input class="form-check-input" type="checkbox" name="disabilities" value="Speech/Language Disorder" id="dis_speech" disabled>
+                        <label class="form-check-label small" for="dis_speech">Speech/Language Disorder</label>
+                    </div>
+                </td>
+
+                <!-- Column 3 -->
+                <td class="align-top" style="width: 25%;">
+                    <div class="form-check mb-1">
+                        <input class="form-check-input" type="checkbox" name="disabilities" value="Learning Disability" id="dis_learning" disabled>
+                        <label class="form-check-label small" for="dis_learning">Learning Disability</label>
+                    </div>
+                    <div class="form-check mb-1">
+                        <input class="form-check-input" type="checkbox" name="disabilities" value="Emotional-Behavioral Disorder" id="dis_emotional" disabled>
+                        <label class="form-check-label small" for="dis_emotional">Emotional- Behavioral Disorder</label>
+                    </div>
+                    <div class="form-check mb-1">
+                        <input class="form-check-input" type="checkbox" name="disabilities" value="Cerebral Palsy" id="dis_cp" disabled>
+                        <label class="form-check-label small" for="dis_cp">Cerebral Palsy</label>
+                    </div>
+                </td>
+
+                <!-- Column 4 -->
+                <td class="align-top" style="width: 25%;">
+                    <div class="form-check mb-1">
+                        <input class="form-check-input" type="checkbox" name="disabilities" value="Intellectual Disability" id="dis_intellectual" disabled>
+                        <label class="form-check-label small" for="dis_intellectual">Intellectual Disability</label>
+                    </div>
+                    <div class="form-check mb-1">
+                        <input class="form-check-input" type="checkbox" name="disabilities" value="Orthopedic/Physical Handicap" id="dis_orthopedic" disabled>
+                        <label class="form-check-label small" for="dis_orthopedic">Orthopedic/Physical Handicap</label>
+                    </div>
+                    <div class="form-check mb-1">
+                        <input class="form-check-input" type="checkbox" name="disabilities" value="Special Health Problem/Chronic Disease" id="dis_health" disabled>
+                        <label class="form-check-label small" for="dis_health">Special Health Problem/ Chronic Disease</label>
+                    </div>
+                    <div class="form-check mb-1 ms-3">
+                        <input class="form-check-input" type="checkbox" name="disabilities" value="Special Health Problem - Cancer" id="dis_cancer" disabled>
+                        <label class="form-check-label small" for="dis_cancer">a. Cancer</label>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </div>
 
 <div>
