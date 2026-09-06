@@ -70,6 +70,16 @@ def enrollment():
             birthdate_str = request.form.get('birthdate')
             birthdate_val = datetime.strptime(birthdate_str, '%Y-%m-%d').date() if birthdate_str else None
 
+            # Parse date signed
+            date_signed_str = request.form.get('date_signed')
+            date_signed_val = None
+            if date_signed_str:
+                try:
+                    date_signed_val = datetime.strptime(date_signed_str, '%Y-%m-%d').date()
+                except ValueError:
+                    # Alternative format fallback (e.g., MM/DD/YYYY)
+                    date_signed_val = datetime.strptime(date_signed_str, '%m/%d/%Y').date()
+
             # Create new record
             new_enrollment = Enrollment(
                 school_year=request.form.get('school_year'),
@@ -128,7 +138,9 @@ def enrollment():
                 track=request.form.get('track'),
                 strand=request.form.get('strand'),
                 distance_learning_modalities=", ".join(modalities_list),
-                signature_data=request.form.get('signature_data')
+                signature_data=request.form.get('signature_data'),
+                parent_guardian_name=request.form.get('parent_guardian_name'),
+                date_signed=date_signed_val
             )
 
             db.session.add(new_enrollment)

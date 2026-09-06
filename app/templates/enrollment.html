@@ -564,7 +564,7 @@
     </div>
 </div>
 
-<div class="border border-dark p-3">
+<div class="border border-dark p-3 my-4">
     <p class="fw-bold small mb-2">
         If school will implement other distance learning modalities aside from face-to-face instruction, what would you prefer for your child?
     </p>
@@ -630,41 +630,58 @@
     </div>
 </div>
 
-<div>
-    <!-- I hereby blah blah blah -->
-    <p>
-        I hereby certify that the above information given are true and correct to the best of my knowledge and I allow the Department of Education to use my child's details to create and/or
-        update his/her learner profile in the Learner Information System. The information herein shall be treated as confidential in compliance with the Data Privacy Act of 2012.
+<div class="mt-5">
+    <p class="small text-justify lh-base" style="text-indent: 4rem;">
+        I hereby certify that the above information given are true and correct to the best of my knowledge and I allow the Department of Education to use my child's details to create and/or update his/her learner profile in the Learner Information System. The information herein shall be treated as confidential in compliance with the Data Privacy Act of 2012.
     </p>
-    <div>
-        <!-- signature and date -->
-        <!-- Main Form Signature Section -->
-        <div class="signature-section">
-        <label><strong>Signatory / Learner Signature</strong></label>
-        <div id="signature_preview" class="signature-preview-box">
-            <p>No signature attached</p>
-        </div>
-        <button type="button" id="open_sig_modal_btn" class="btn">Sign Document</button>
-        <input type="hidden" id="signature_data" name="signature_data" required />
-        </div>
 
-        <!-- Signature Modal Overlay -->
-        <div id="sig_modal" class="modal-overlay" style="display:none;">
-        <div class="modal-content">
-            <h3>Draw Your Signature</h3>
-            <canvas id="sig_canvas" width="400" height="180" style="touch-action: none; cursor: crosshair;"></canvas>
-            
-            <div class="modal-actions">
-            <button type="button" id="clear_sig_btn">Clear</button>
-            <button type="button" id="cancel_sig_btn">Cancel</button>
-            <button type="button" id="save_sig_btn" class="btn-primary">Adopt & Save</button>
+    <div class="mt-5 row align-items-end justify-content-between">
+    
+    <div class="col-md-5 signature-section text-center">
+        <button type="button" id="open_sig_modal_btn" class="btn btn-sm btn-outline-primary mb-1">
+            + Add Signature
+        </button>
+
+        <div id="signature_preview" class="signature-preview-box" style="min-height: 45px; display: flex; align-items: flex-end; justify-content: center;"></div>
+
+        <input type="text" id="parent_guardian_name" name="parent_guardian_name" required
+                class="form-control form-control-sm border-0 border-bottom rounded-0 text-center fw-bold shadow-none p-0"
+                placeholder="Enter Printed Name" style="font-size: 0.95rem;">
+
+        <p class="text-center small text-secondary mb-0 mt-1" style="font-size: 0.8rem;">
+            Signature Over Printed Name of Parent/Guardian
+        </p>
+
+        <input type="hidden" id="signature_data" name="signature_data" required />
+    </div>
+
+    <div class="col-md-5 text-center">
+        <input type="text" id="date_signed" name="date_signed" 
+                class="form-control form-control-sm border-0 border-bottom rounded-0 text-center shadow-none p-0" 
+                style="font-size: 0.95rem; background-color: transparent;" readonly>
+      
+        <p class="text-center small text-secondary mb-0 mt-1" style="font-size: 0.8rem;">
+            Date
+        </p>
+    </div>
+
+</div>
+
+    <div id="sig_modal" class="modal-overlay" style="display:none;">
+        <div class="modal-content p-4 border rounded bg-white shadow" style="max-width: 450px; width: 90%;">
+            <h5 class="modal-title mb-3 fw-bold">Draw Your Signature</h5>
+            <canvas id="sig_canvas" width="400" height="180" class="border border-secondary mb-3 rounded w-100" style="touch-action: none; cursor: crosshair; background-color: #fff;"></canvas>
+      
+            <div class="modal-actions d-flex gap-2 justify-content-end">
+                <button type="button" id="clear_sig_btn" class="btn btn-sm btn-secondary">Clear</button>
+                <button type="button" id="cancel_sig_btn" class="btn btn-sm btn-outline-dark">Cancel</button>
+                <button type="button" id="save_sig_btn" class="btn btn-sm btn-primary">Adopt & Save</button>
             </div>
-        </div>
         </div>
     </div>
 </div>
 
-<div style="margin-top: 20px;">
+<div class="mt-4">
     <button type="submit" class="btn btn-primary">Submit Enrollment</button>
 </div>
 
@@ -679,4 +696,5 @@
 <script src="{{ url_for('static', filename='js/enrollment/address-sync.js') }}"></script>
 <script src="{{ url_for('static', filename='js/enrollment/phone-formatter.js') }}"></script>
 <script src="{{ url_for('static', filename='js/enrollment/signature-pad.js') }}"></script>
+<script src="{{ url_for('static', filename='js/enrollment/autofill-date.js')}}"></script>
 {% endblock %}

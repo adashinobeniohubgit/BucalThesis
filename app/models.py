@@ -88,6 +88,9 @@ class Enrollment(db.Model):
     distance_learning_modalities = db.Column(db.Text)
     signature_data = db.Column(db.Text)
 
+    parent_guardian_name = db.Column(db.String(150))
+    date_signed = db.Column(db.Date)
+
     date_submitted = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __repr__(self):

@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const canvas = document.getElementById('sig_canvas');
     const sigInput = document.getElementById('signature_data');
     const sigPreview = document.getElementById('signature_preview');
+    const dateInput = document.getElementById('date_signed');
 
     if (canvas && openSigBtn) {
         const ctx = canvas.getContext('2d');
@@ -86,6 +87,28 @@ document.addEventListener('DOMContentLoaded', function () {
                     sigPreview.innerHTML = `<img src="${dataUrl}" alt="Signature Preview" style="max-width:100%; height:auto;" />`;
                 }
                 openSigBtn.textContent = 'Change Signature';
+
+                // Automatically capture the exact time the form was signed
+                if (dateInput) {
+                    const now = new Date();
+                    
+                    // Format option 1: standard YYYY-MM-DD format (Best for database parsing)
+                    const year = now.getFullYear();
+                    const month = String(now.getMonth() + 1).padStart(2, '0');
+                    const day = String(now.getDate()).padStart(2, '0');
+                    dateInput.value = `${year}-${month}-${day}`;
+
+                    /* 
+                       Format option 2: Human readable format (e.g., September 6, 2026)
+                       If you prefer readable text in the field, uncomment below:
+
+                       dateInput.value = now.toLocaleDateString('en-US', {
+                           year: 'numeric',
+                           month: 'long',
+                           day: 'numeric'
+                       });
+                    */
+                }
 
                 sigModal.style.display = 'none';
             });
