@@ -154,7 +154,16 @@ def enrollment():
             flash(f'An error occurred while saving the data: {str(e)}', 'danger')
     return render_template('enrollment.html')
 
+# Enrolled Student View
+@main_bp.route("/enrolled")
+def enrolled():
+    if 'user_id' not in session:
+        return redirect(url_for('main.login'))
 
+    return render_template('enrolled.html')
+
+
+# Grade View
 @main_bp.route("/grades")
 def grades():
     if 'user_id' not in session:
