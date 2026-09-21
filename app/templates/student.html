@@ -1,0 +1,59 @@
+{% extends 'dashboard.html' %}
+
+{% block content %}
+<div">
+    <h3">
+        {{ student.last_name }}, {{ student.first_name }} {{ student.middle_name }}
+    </h3>
+    <a href="{{ url_for('main.enrolled') }}" class="btn btn-sm btn-outline-secondary">
+        &larr; Back to list
+    </a>
+</div>
+
+<div>
+    <div>
+        <div>
+            <h6>Learner Information</h6>
+            <p><strong>LRN:</strong> {{ student.lrn_no or '—' }}</p>
+            <p><strong>Grade Level:</strong> {{ student.grade_level.replace('_', ' ') if student.grade_level else '—' }}</p>
+            <p><strong>Sex:</strong> {{ student.sex or '—' }}</p>
+            <p><strong>Birthdate:</strong> {{ student.birthdate.strftime('%B %d, %Y') if student.birthdate else '—' }}</p>
+            <p><strong>Place of Birth:</strong> {{ student.birth_place or '—' }}</p>
+            <p><strong>Mother Tongue:</strong> {{ student.mother_tongue or '—' }}</p>
+        </div>
+    </div>
+
+    <div>
+        <div>
+            <h6>Address</h6>
+            <p><strong>Current:</strong>
+                {{ student.current_house_no }} {{ student.current_street_name }},
+                {{ student.current_barangay }}, {{ student.current_municipality_city }},
+                {{ student.current_province }}
+            </p>
+            <p><strong>Permanent:</strong>
+                {{ student.perm_house_no }} {{ student.perm_street_name }},
+                {{ student.perm_barangay }}, {{ student.perm_municipality_city }},
+                {{ student.perm_province }}
+            </p>
+        </div>
+    </div>
+
+    <div>
+        <div>
+            <h6>Parent/Guardian</h6>
+            <p><strong>Father:</strong> {{ student.father_last_name }}, {{ student.father_first_name }} {{ student.father_middle_name }}</p>
+            <p><strong>Mother's Maiden Name:</strong> {{ student.mother_maiden_last_name }}, {{ student.mother_maiden_first_name }} {{ student.mother_maiden_middle_name }}</p>
+            <p><strong>Legal Guardian:</strong> {{ student.legal_guardian_last_name }}, {{ student.legal_guardian_first_name }} {{ student.legal_guardian_middle_name }}</p>
+        </div>
+    </div>
+
+    <div>
+        <div>
+            <h6>Enrollment Details</h6>
+            <p><strong>Date Enrolled:</strong> {{ student.date_signed.strftime('%B %d, %Y') if student.date_signed else '—' }}</p>
+            <p><strong>Parent/Guardian Signature Name:</strong> {{ student.parent_guardian_name or '—' }}</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

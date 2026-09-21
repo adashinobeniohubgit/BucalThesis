@@ -159,8 +159,21 @@ def enrollment():
 def enrolled():
     if 'user_id' not in session:
         return redirect(url_for('main.login'))
+    
+    students = Enrollment.query.order_by(Enrollment.id.desc()).all()
 
-    return render_template('enrolled.html')
+    # Display number of enrollees in terminal for testing
+    # print(f"DEBUG: found {len(students)} enrollments")
+
+    return render_template('enrolled.html', students=students)
+
+@main_bp.route("/enrolled/<int:student_id>")
+def student_detail(student_id):
+    if 'user_id' not in session:
+        return redirect(url_for('main_login'))
+
+    student = Enrollment.query.get_or_404(student_id)
+    return render_template('student.html', student=student)
 
 
 # Grade View
