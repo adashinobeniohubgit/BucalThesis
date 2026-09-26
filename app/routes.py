@@ -100,7 +100,7 @@ def enrollment():
                 is_ip=request.form.get('is_ip'),
                 ip_community=request.form.get('ip_community'),
                 is_4ps=request.form.get('is_4ps'),
-                ps_4id_no=request.form.get('4ps_id_no'),
+                four_ps_id_no=request.form.get('four_ps_id_no'),
                 is_lwd=request.form.get('is_lwd'),
                 disabilities=", ".join(disabilities_list),
                 current_house_no=request.form.get('current_house_no'),

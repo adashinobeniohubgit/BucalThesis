@@ -39,7 +39,7 @@ class Enrollment(db.Model):
     is_ip = db.Column(db.String(5))
     ip_community = db.Column(db.String(100))
     is_4ps = db.Column(db.String(5))
-    ps_4id_no = db.Column(db.String(20))
+    four_ps_id_no = db.Column(db.String(20))
 
     is_lwd = db.Column(db.String(5))
     disabilities = db.Column(db.Text)
