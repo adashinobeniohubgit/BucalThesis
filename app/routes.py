@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, redirect, request, url_for, session, flash
-from app.models import User, Enrollment # Make sure to import your User model instead of or alongside myTask
+from app.models import User, Enrollment, YearlyMetric # Make sure to import your User model instead of or alongside myTask
 from app import db
 from datetime import datetime 
 
@@ -43,8 +43,10 @@ def logout():
 def index():
     if 'user_id' not in session:
         return redirect(url_for('main.login'))
+
+    metrics = YearlyMetric.query.order_by(YearlyMetric.school_year.desc()).all()
         
-    return render_template('dashboard.html', username=session['username'])
+    return render_template('dashboard.html', username=session['username'], metrics=metrics)
 
 @main_bp.route("/test_signatures")
 def test_signatures():

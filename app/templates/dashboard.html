@@ -46,13 +46,77 @@
     <section class="main-content min-vh-100 bg-light">
         <div class="p-4">
             {% block content %}
-            <h1>Graphs</h1>
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="text-dark">Dashboard Overview</h2>
+                <button id="toggleMetricBtn" class="btn btn-primary">Yearly Metric</button>
+            </div>
+
+            <div id="metricsCard" class="card shadow-sm d-none">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">Yearly Metrics Summary</h5>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover align-middle">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>School Year</th>
+                                    <th>Enrollees</th>
+                                    <th>Promotion</th>
+                                    <th>Survival</th>
+                                    <th>Completion</th>
+                                    <th>Transition</th>
+                                    <th>Dropout</th>
+                                    <th>Graduation</th>
+                                    <th>Retention</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for m in metrics %}
+                                <tr>
+                                    <td><strong>{{ m.school_year }}</strong></td>
+                                    <td>{{ m.enrollee_count }}</td>
+                                    <td>{{ m.promotion_rate }}%</td>
+                                    <td>{{ m.cohort_survival_rate }}%</td>
+                                    <td>{{ m.completion_rate }}%</td>
+                                    <td>{{ m.transition_rate }}%</td>
+                                    <td>{{ m.dropout_rate }}%</td>
+                                    <td>{{ m.graduation_rate }}%</td>
+                                    <td>{{ m.retention_rate }}%</td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td colspan="9" class="text-center text-muted py-4">No yearly metrics available.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
             {% endblock %}
         </div>
     </section>
 
 
-    {% block scripts %}{% endblock %}
+    {% block scripts %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const toggleBtn = document.getElementById('toggleMetricBtn');
+            const metricsCard = document.getElementById('metricsCard');
+
+            toggleBtn.addEventListener('click', function () {
+                // Toggle the 'd-none' Bootstrap class to show/hide
+                metricsCard.classList.toggle('d-none');
+                
+                // Optionally update button text based on state
+                if (metricsCard.classList.contains('d-none')) {
+                    toggleBtn.textContent = 'Show Yearly Metric';
+                } else {
+                    toggleBtn.textContent = 'Hide Yearly Metric';
+                }
+            });
+        });
+    </script>
+    {% endblock %}
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 </body>
