@@ -95,3 +95,21 @@ class Enrollment(db.Model):
 
     def __repr__(self):
         return f'<Enrollment {self.last_name}, {self.first_name}>'
+
+
+class YearlyMetric(db.Model):
+    __tablename__ = 'yearly_metric'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    school_year = db.Column(db.String(20), nullable=False)
+    promotion_rate = db.Column(db.Float)
+    cohort_survival_rate = db.Column(db.Float)
+    completion_rate = db.Column(db.Float)
+    transition_rate = db.Column(db.Float)
+    dropout_rate = db.Column(db.Float)
+    graduation_rate = db.Column(db.Float)
+    retention_rate = db.Column(db.Float)
+    enrollee_count = db.Column(db.Integer)
+
+    def __repr__(self):
+        return f'<YearlyMetric {self.school_year}>'
