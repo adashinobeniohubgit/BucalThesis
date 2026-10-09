@@ -11,8 +11,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (hasLrnYes.checked) {
             lrnInput.required = true;
+            lrnInput.readOnly = false;
         } else {
             lrnInput.required = false;
+            lrnInput.readOnly = true;
             lrnInput.value = '';
         }
     }
@@ -54,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // ====================================================
     const fourPsYes = document.getElementById('4ps_yes');
     const fourPsNo = document.getElementById('4ps_no');
-    const fourPsInput = document.getElementById('4ps_id_no');
+    const fourPsInput = document.getElementById('four_ps_id_no');
 
     function toggle4psSpecify() {
         if (!fourPsYes || !fourPsInput) return;
