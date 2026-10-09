@@ -5,6 +5,7 @@ from datetime import datetime
 
 main_bp = Blueprint('main', __name__)
 
+LOCK_BOUNDARY_YEAR = 2024
 
 @main_bp.route("/login", methods=['GET', 'POST'])
 def login():
@@ -39,11 +40,50 @@ def logout():
 
 
 # Dashboard/Base View
+
+def get_current_school_year():
+
+    # for testing date
+    # today = datetime(2029, 7, 1)
+
+    today = datetime.utcnow()
+    start_year = today.year if today.month >= 6 else today.year - 1
+    return f"{start_year} - {start_year + 1}"
+
+def ensure_current_school_year_metric():
+    current_sy = get_current_school_year()
+    exists = YearlyMetric.query.filter_by(school_year=current_sy).first()
+    if not exists:
+        db.session.add(YearlyMetric(school_year=current_sy))
+        db.session.commit()
+
+@main_bp.route("/metrics/<int:metric_id>/update", methods=['POST'])
+def update_metric(metric_id):
+    if 'user_id' not in session:
+        return {'error': 'Unauthorized'}, 401
+
+    metric = YearlyMetric.query.get_or_404(metric_id)
+
+    start_year = int(metric.school_year.split('-')[0])
+    if start_year <= LOCK_BOUNDARY_YEAR:
+        return {'error': 'This school year is locked and cannot be edited.'}, 403
+
+    data = request.get_json()
+    for field in ['enrollee_count', 'promotion_rate', 'cohort_survival_rate',
+                  'completion_rate', 'transition_rate', 'dropout_rate',
+                  'graduation_rate', 'retention_rate']:
+        if field in data:
+            setattr(metric, field, data[field])
+
+    db.session.commit()
+    return {'success': True}
+
 @main_bp.route("/")
 def index():
     if 'user_id' not in session:
         return redirect(url_for('main.login'))
 
+    ensure_current_school_year_metric()
     metrics = YearlyMetric.query.order_by(YearlyMetric.school_year.desc()).all()
         
     return render_template('dashboard.html', username=session['username'], metrics=metrics)

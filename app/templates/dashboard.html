@@ -12,7 +12,7 @@
         <div class="p-3 border-bottom border-secondary text-center">
             <span class="fs-5 fw-semibold text-white">Bucal Portal</span>
         </div>
-        
+
         <ul class="nav flex-column gap-1 flex-grow-1 text-center">
             <li class="nav-item">
                 <a href="{{ url_for('main.index') }}" class="nav-link">
@@ -34,7 +34,7 @@
                     Grades
                 </a>
             </li>
-            
+
             <li class="p-3">
                 <a href="{{ url_for('main.logout') }}" class="btn btn-danger w-100">
                     Logout
@@ -67,24 +67,48 @@
                                     <th>Dropout</th>
                                     <th>Graduation</th>
                                     <th>Retention</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for m in metrics %}
-                                <tr>
+                                {% set start_year = m.school_year.split('-')[0] | trim | int(-1) %}
+                                {% set locked = start_year != -1 and start_year <= 2024 %}
+                                <tr data-metric-id="{{ m.id }}" data-update-url="{{ url_for('main.update_metric', metric_id=m.id) }}">
                                     <td><strong>{{ m.school_year }}</strong></td>
-                                    <td>{{ m.enrollee_count }}</td>
-                                    <td>{{ m.promotion_rate }}%</td>
-                                    <td>{{ m.cohort_survival_rate }}%</td>
-                                    <td>{{ m.completion_rate }}%</td>
-                                    <td>{{ m.transition_rate }}%</td>
-                                    <td>{{ m.dropout_rate }}%</td>
-                                    <td>{{ m.graduation_rate }}%</td>
-                                    <td>{{ m.retention_rate }}%</td>
+
+                                    {% for field in ['enrollee_count', 'promotion_rate', 'cohort_survival_rate',
+                                                      'completion_rate', 'transition_rate', 'dropout_rate',
+                                                      'graduation_rate', 'retention_rate'] %}
+                                    <td>
+                                        {% if locked %}
+                                            {{ m[field] if m[field] is not none else '—' }}{{ '%' if field != 'enrollee_count' and m[field] is not none }}
+                                        {% else %}
+                                            <span class="metric-display d-none" data-field="{{ field }}"></span>
+                                            <div class="input-group input-group-sm metric-edit-group">
+                                                <input type="number" step="0.01"
+                                                       class="form-control metric-input"
+                                                       data-field="{{ field }}"
+                                                       value="{{ m[field] if m[field] is not none else '' }}">
+                                                {% if field != 'enrollee_count' %}
+                                                    <span class="input-group-text">%</span>
+                                                {% endif %}
+                                            </div>
+                                        {% endif %}
+                                    </td>
+                                    {% endfor %}
+
+                                    <td>
+                                        {% if locked %}
+                                            <span class="badge bg-secondary">Locked</span>
+                                        {% else %}
+                                            <button class="btn btn-sm btn-success save-row-btn" data-mode="save">Save</button>
+                                        {% endif %}
+                                    </td>
                                 </tr>
                                 {% else %}
                                 <tr>
-                                    <td colspan="9" class="text-center text-muted py-4">No yearly metrics available.</td>
+                                    <td colspan="10" class="text-center text-muted py-4">No yearly metrics available.</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -106,7 +130,7 @@
             toggleBtn.addEventListener('click', function () {
                 // Toggle the 'd-none' Bootstrap class to show/hide
                 metricsCard.classList.toggle('d-none');
-                
+
                 // Optionally update button text based on state
                 if (metricsCard.classList.contains('d-none')) {
                     toggleBtn.textContent = 'Show Yearly Metric';
@@ -114,6 +138,75 @@
                     toggleBtn.textContent = 'Hide Yearly Metric';
                 }
             });
+
+            function setRowMode(row, mode) {
+                // mode is either 'edit' or 'display'
+                row.querySelectorAll('.metric-edit-group').forEach(function (group) {
+                    group.classList.toggle('d-none', mode === 'display');
+                });
+                row.querySelectorAll('.metric-display').forEach(function (span) {
+                    span.classList.toggle('d-none', mode === 'edit');
+                    if (mode === 'display') {
+                        const field = span.dataset.field;
+                        const input = row.querySelector(`.metric-input[data-field="${field}"]`);
+                        const isPercent = field !== 'enrollee_count';
+                        span.textContent = input.value === '' ? '—' : (input.value + (isPercent ? '%' : ''));
+                    }
+                });
+            }
+
+            document.querySelectorAll('.save-row-btn').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    const row = btn.closest('tr');
+
+                    
+                    if (btn.dataset.mode === 'edit') {
+                        setRowMode(row, 'edit');
+                        btn.textContent = 'Save';
+                        btn.dataset.mode = 'save';
+                        btn.classList.remove('btn-outline-success');
+                        btn.classList.add('btn-success');
+                        return;
+                    }
+
+                    const updateUrl = row.dataset.updateUrl;
+                    const payload = {};
+                    row.querySelectorAll('.metric-input').forEach(function (input) {
+                        payload[input.dataset.field] = parseFloat(input.value) || 0;
+                    });
+
+                    btn.disabled = true;
+                    btn.textContent = 'Saving...';
+
+                    fetch(updateUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    })
+                        .then(res => res.json().then(data => ({ status: res.status, body: data })))
+                        .then(({ status, body }) => {
+                            btn.disabled = false;
+                            if (status === 200 && body.success) {
+                                setRowMode(row, 'display');
+                                btn.textContent = 'Edit';
+                                btn.dataset.mode = 'edit';
+                                btn.classList.remove('btn-success');
+                                btn.classList.add('btn-outline-success');
+                            } else {
+                                console.error('Save failed:', status, body);
+                                alert(body.error || `Save failed (status ${status}).`);
+                                btn.textContent = 'Save';
+                            }
+                        })
+                        .catch(err => {
+                            console.error('Network/parse error:', err);
+                            alert('Something went wrong while saving — check the browser console for details.');
+                            btn.disabled = false;
+                            btn.textContent = 'Save';
+                        });
+                });
+            });
+
         });
     </script>
     {% endblock %}
