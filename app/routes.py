@@ -6,6 +6,7 @@ from datetime import datetime
 main_bp = Blueprint('main', __name__)
 
 LOCK_BOUNDARY_YEAR = 2024
+SCHOOL_YEAR_ROLLOVER_MONTH = 6
 
 METRIC_FIELDS = [
     'enrollee_count', 'promotion_rate', 'cohort_survival_rate',
@@ -47,17 +48,17 @@ def logout():
 
 # Dashboard/Base View
 
-def get_latest_completed_start_year():
-    
+def get_current_start_year():
+
     # for testing date
-    # today = datetime(2027, 7, 1)
+    # today = datetime(2027, 6, 1)
 
     today = datetime.utcnow()
-    return today.year - 1 if today.month >= 6 else today.year - 2
+    return today.year if today.month >= SCHOOL_YEAR_ROLLOVER_MONTH else today.year - 1
  
  
 def ensure_current_school_year_metric():
-    latest = get_latest_completed_start_year()
+    latest = get_current_start_year()
  
     existing = {m.school_year.replace(' ', '') for m in YearlyMetric.query.all()}
  
@@ -75,6 +76,7 @@ def update_metric(metric_id):
  
     metric = YearlyMetric.query.get_or_404(metric_id)
  
+    
     start_year = int(metric.school_year.split('-')[0].strip())
     if start_year <= LOCK_BOUNDARY_YEAR:
         return {'error': 'This school year is locked and cannot be edited.'}, 403
@@ -86,6 +88,7 @@ def update_metric(metric_id):
  
     db.session.commit()
     return {'success': True}
+
 @main_bp.route("/")
 def index():
     if 'user_id' not in session:
