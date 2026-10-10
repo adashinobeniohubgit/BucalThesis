@@ -7,6 +7,12 @@ main_bp = Blueprint('main', __name__)
 
 LOCK_BOUNDARY_YEAR = 2024
 
+METRIC_FIELDS = [
+    'enrollee_count', 'promotion_rate', 'cohort_survival_rate',
+    'completion_rate', 'transition_rate', 'dropout_rate',
+    'graduation_rate', 'retention_rate',
+]
+
 @main_bp.route("/login", methods=['GET', 'POST'])
 def login():
     # If the user is already logged in, skip the login page and send them to dashboard
@@ -41,43 +47,45 @@ def logout():
 
 # Dashboard/Base View
 
-def get_current_school_year():
-
+def get_latest_completed_start_year():
+    
     # for testing date
-    # today = datetime(2029, 7, 1)
+    # today = datetime(2027, 7, 1)
 
     today = datetime.utcnow()
-    start_year = today.year if today.month >= 6 else today.year - 1
-    return f"{start_year} - {start_year + 1}"
-
+    return today.year - 1 if today.month >= 6 else today.year - 2
+ 
+ 
 def ensure_current_school_year_metric():
-    current_sy = get_current_school_year()
-    exists = YearlyMetric.query.filter_by(school_year=current_sy).first()
-    if not exists:
-        db.session.add(YearlyMetric(school_year=current_sy))
-        db.session.commit()
+    latest = get_latest_completed_start_year()
+ 
+    existing = {m.school_year.replace(' ', '') for m in YearlyMetric.query.all()}
+ 
+    for start_year in range(LOCK_BOUNDARY_YEAR + 1, latest + 1):
+        label = f"{start_year}-{start_year + 1}"
+        if label not in existing:
+            db.session.add(YearlyMetric(school_year=label))
+ 
+    db.session.commit()
 
 @main_bp.route("/metrics/<int:metric_id>/update", methods=['POST'])
 def update_metric(metric_id):
     if 'user_id' not in session:
         return {'error': 'Unauthorized'}, 401
-
+ 
     metric = YearlyMetric.query.get_or_404(metric_id)
-
-    start_year = int(metric.school_year.split('-')[0])
+ 
+    start_year = int(metric.school_year.split('-')[0].strip())
     if start_year <= LOCK_BOUNDARY_YEAR:
         return {'error': 'This school year is locked and cannot be edited.'}, 403
-
-    data = request.get_json()
-    for field in ['enrollee_count', 'promotion_rate', 'cohort_survival_rate',
-                  'completion_rate', 'transition_rate', 'dropout_rate',
-                  'graduation_rate', 'retention_rate']:
+ 
+    data = request.get_json(silent=True) or {}
+    for field in METRIC_FIELDS:
         if field in data:
             setattr(metric, field, data[field])
-
+ 
     db.session.commit()
     return {'success': True}
-
 @main_bp.route("/")
 def index():
     if 'user_id' not in session:
