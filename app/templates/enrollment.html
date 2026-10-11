@@ -7,8 +7,24 @@
 <!-- DO NOT REMOVE ANY COMMENTS (ANG DAMING INPUTS NEED KO NG MARKING) -->
 <!--                                                                   -->
 <!--                                                                   -->
+<link rel="stylesheet" href="../static/css/enrollment.css">
 
+
+
+<!-- PROGRESS BAR -->
+<div class="stepper-wrap">
+    <div class="stepper">
+        <div class="stepper-track"><div class="stepper-fill" id="stepFill"></div></div>
+        <button type="button" class="step-node"><span class="step-dot">1</span><span class="step-label">Learner Information</span></button>
+        <button type="button" class="step-node"><span class="step-dot">2</span><span class="step-label">Parent/Guardian's Information</span></button>
+        <button type="button" class="step-node"><span class="step-dot">3</span><span class="step-label">Signatories</span></button>
+    </div>
+</div>
 <form action="{{ url_for('main.enrollment') }}" method="POST">
+<!-- PROGRESS BAR PART 1 START -->
+<section id="part-1" class="form-part">
+
+
 <div class="d-flex align-items-center justify-content-center gap-4 py-4 border-bottom mb-4">
     <img src="{{ url_for('static', filename='images/DepedLogo.webp') }}" alt="DepEd Logo" style="height: 90px; width: auto;">
     <div class="text-center">
@@ -401,6 +417,11 @@
     </div>
 </div>
 
+<!-- PROGRESS BAR PART 1 END -->
+</section>
+<!-- PROGRESS BAR PART 2 START -->
+<section id="part-2" class="form-part">
+
 <div class="border p-2">
     <div class="border-top border-bottom border-dark text-center py-1 my-2">
         <span class="fw-bold small text-uppercase">PARENT'S/GUARDIAN'S INFORMATION</span>
@@ -630,6 +651,11 @@
     </div>
 </div>
 
+<!-- PROGRESS BAR PART 2 END -->
+</section>
+<!-- PROGRESS BAR PART 3 START -->
+<section id="part-3" class="form-part">
+
 <div class="mt-5">
     <p class="small text-justify lh-base" style="text-indent: 4rem;">
         I hereby certify that the above information given are true and correct to the best of my knowledge and I allow the Department of Education to use my child's details to create and/or update his/her learner profile in the Learner Information System. The information herein shall be treated as confidential in compliance with the Data Privacy Act of 2012.
@@ -681,8 +707,13 @@
     </div>
 </div>
 
-<div class="mt-4">
-    <button type="submit" class="btn btn-primary">Submit Enrollment</button>
+<!-- PROGRESS BAR PART 3 END -->
+</section>
+
+<div class="mt-4 d-flex">
+    <button type="button" id="prev_part_btn" class="btn btn-outline-secondary me-auto">&larr; Back</button>
+    <button type="button" id="next_part_btn" class="btn btn-primary ms-auto">Next &rarr;</button>
+    <button type="submit" id="submit_btn" class="btn btn-primary ms-auto">Submit Enrollment</button>
 </div>
 
 </form>
@@ -697,4 +728,5 @@
 <script src="{{ url_for('static', filename='js/enrollment/phone-formatter.js') }}"></script>
 <script src="{{ url_for('static', filename='js/enrollment/signature-pad.js') }}"></script>
 <script src="{{ url_for('static', filename='js/enrollment/autofill-date.js')}}"></script>
+<script src="{{ url_for('static', filename='js/enrollment/progress-stepper.js') }}"></script>
 {% endblock %}

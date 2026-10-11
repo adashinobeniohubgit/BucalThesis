@@ -1,0 +1,72 @@
+.stepper-wrap { 
+    position: sticky; 
+    top: 0; 
+    z-index: 10; 
+    background: var(--bs-body-bg, #fff); 
+    padding: .75rem 0 1.25rem; 
+    margin-bottom: 1rem; 
+}
+.stepper { 
+    position: relative; 
+    display: flex; 
+    justify-content: space-between; 
+    max-width: 640px; 
+    margin: 0 auto; 
+}
+.stepper-track { 
+    position: absolute; 
+    top: 17px; 
+    left: 60px; 
+    right: 60px; 
+    height: 4px; 
+    background: #dee2e6; 
+    border-radius: 2px; 
+}
+.stepper-fill { 
+    height: 100%; 
+    width: 0; 
+    background: #0d6efd; 
+    border-radius: 2px; 
+    transition: width .3s ease; 
+}
+.step-node { 
+    position: relative; 
+    z-index: 1; 
+    width: 120px; 
+    background: none; border: 0; 
+    text-align: center; 
+    padding: 0; 
+    cursor: pointer; }
+.step-dot { 
+    display: inline-flex; 
+    align-items: center; 
+    justify-content: center; 
+    width: 38px; 
+    height: 38px; 
+    border-radius: 50%;
+    background: #fff; border: 3px solid #dee2e6; font-weight: 600; color: #6c757d; transition: all .3s ease; }
+.step-label { 
+    display: block; 
+    margin-top: .35rem; 
+    font-size: .85rem; 
+    color: #6c757d; 
+}
+.step-node.active .step-dot { 
+    border-color: #0d6efd; 
+    color: #0d6efd; 
+}
+.step-node.active .step-label { 
+    color: #0d6efd; 
+    font-weight: 600; 
+}
+.step-node.done .step-dot { 
+    background: #0d6efd; 
+    border-color: #0d6efd; 
+    color: #fff; 
+}
+.step-node.done .step-label { 
+    color: #212529; 
+}
+.form-part { 
+    scroll-margin-top: 110px; 
+}
