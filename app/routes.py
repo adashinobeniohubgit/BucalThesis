@@ -99,7 +99,6 @@ def index():
     ensure_current_school_year_metric()
     metrics = YearlyMetric.query.order_by(YearlyMetric.school_year.desc()).all()
         
-    # --- AUTOMATED LAGGED MULTIPLE LINEAR REGRESSION ---
     all_metrics_asc = YearlyMetric.query.order_by(YearlyMetric.school_year.asc()).all()
     data = []
     for m in all_metrics_asc:
@@ -122,12 +121,11 @@ def index():
     if not df.empty:
         df_clean = df[(df['enrollee_count'] > 0) & (df['promotion_rate'] > 0)].copy()
         
-        # Shift enrollee count up by 1 so year t features predict year t+1 enrollees
         df_clean['next_enrollee_count'] = df_clean['enrollee_count'].shift(-1)
         train_df = df_clean.dropna(subset=['next_enrollee_count'])
         
         features = [
-            'promotion_rate', 'cohort_survival_rate', 'completion_rate',
+            'enrollee_count', 'promotion_rate', 'cohort_survival_rate', 'completion_rate',
             'transition_rate', 'dropout_rate', 'graduation_rate', 'retention_rate'
         ]
         
@@ -138,10 +136,8 @@ def index():
             model = LinearRegression()
             model.fit(X, y)
             
-            # Calculate Model R2 Score
             r2_score_val = round(float(model.score(X, y)), 4)
             
-            # Use the latest available row (e.g., 2026-2027) to predict the subsequent school year
             latest_record = df.iloc[-1]
             if latest_record['promotion_rate'] == 0 and len(df) > 1:
                 latest_features = df.iloc[-2][features].values.reshape(1, -1)
