@@ -6,14 +6,17 @@ from dotenv import load_dotenv
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
-load_dotenv()
+from flask_wtf.csrf import CSRFProtect
 
+load_dotenv()
+csrf = CSRFProtect()
 db = SQLAlchemy()
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
 def create_app():
     app = Flask(__name__)
+    
 
     # app.config['SECRET_KEY'] = 'sample_secret_key'
     # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root@localhost/bucal_db'
@@ -32,6 +35,7 @@ def create_app():
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     db.init_app(app)
+    csrf.init_app(app)
 
     from app.routes import main_bp
     app.register_blueprint(main_bp)

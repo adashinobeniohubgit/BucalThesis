@@ -113,3 +113,32 @@ class YearlyMetric(db.Model):
 
     def __repr__(self):
         return f'<YearlyMetric {self.school_year}>'
+
+class Grades(db.Model):
+    __tablename__ = 'student_grades'
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    student_id = db.Column(
+        db.Integer,
+        db.ForeignKey("enrollment.id"),
+        nullable=False
+    )
+
+    grade_level = db.Column(db.String(30), nullable=False)
+    original_filename = db.Column(db.String(255), nullable=False)
+    stored_filename = db.Column(db.String(255), nullable=False)
+    
+
+    file_data = db.Column(db.LargeBinary, nullable=True)
+    mime_type = db.Column(db.String(100), nullable=True)
+
+    uploaded_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    __table_args__ = (
+        db.UniqueConstraint(
+            'student_id',
+            'grade_level',
+            name="unique_student_grade_level"
+        ),
+    )
