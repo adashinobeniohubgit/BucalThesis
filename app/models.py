@@ -113,3 +113,20 @@ class YearlyMetric(db.Model):
 
     def __repr__(self):
         return f'<YearlyMetric {self.school_year}>'
+
+class CalendarEvent(db.Model):
+    __tablename__ = 'calendar_events'
+ 
+    id = db.Column(db.Integer, primary_key=True)
+    event_date = db.Column(db.Date, nullable=False, index=True)
+    tag = db.Column(db.String(20), nullable=False)          # holiday / event / exam
+    description = db.Column(db.Text, default='')
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+ 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'date': self.event_date.strftime('%Y-%m-%d'),
+            'tag': self.tag,
+            'description': self.description or '',
+        }

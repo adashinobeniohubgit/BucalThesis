@@ -1,0 +1,63 @@
+{% extends 'dashboard.html' %}
+
+
+{% block content %}
+<link rel="stylesheet" href="../static/css/calendar.css">
+ 
+<h1>Calendar</h1>
+ 
+<div class="cal-wrap">
+    <div class="cal-card">
+        <div class="cal-head">
+            <h2 id="calTitle"></h2>
+            <div class="cal-nav">
+                <button id="calPrev" type="button">&lt; Prev</button>
+                <button id="calToday" type="button">Today</button>
+                <button id="calNext" type="button">Next &gt;</button>
+            </div>
+        </div>
+            <div class="cal-grid" id="calGrid"></div>
+    </div>
+ 
+    <div class="cal-card">
+        <div class="side-section">
+            <h3>Current</h3>
+            <div id="sideCurrent"></div>
+        </div>
+        <div class="side-section">
+            <h3>Upcoming</h3>
+            <div id="sideUpcoming"></div>
+        </div>
+    </div>
+</div>
+ 
+<div class="cal-modal-bg" id="calModalBg">
+    <div class="cal-modal">
+        <h3 id="modalDate"></h3>
+        <div id="modalEntries"></div>
+ 
+        <label for="fTag">Tag</label>
+        <select id="fTag">
+            <option value="holiday">Holiday</option>
+            <option value="event">Event</option>
+            <option value="exam">Exam</option>
+        </select>
+ 
+        <label for="fDesc">Description</label>
+        <textarea id="fDesc" maxlength="500" placeholder="Add a description..."></textarea>
+ 
+        <div class="form-error" id="formError"></div>
+        <div class="modal-actions">
+            <button type="button" class="cal-btn" id="btnClose">Close</button>
+            <button type="button" class="cal-btn" id="btnCancelEdit" style="display:none">Cancel edit</button>
+            <button type="button" class="cal-btn primary" id="btnSave">Add</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block scripts %}
+<script>window.CALENDAR_API = "{{ url_for('main.calendar_events') }}";</script>
+<script src="{{ url_for('static', filename='js/calendar/calendar.js') }}"></script>
+{% endblock %}

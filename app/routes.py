@@ -1,5 +1,5 @@
-from flask import Blueprint, render_template, redirect, request, url_for, session, flash
-from app.models import User, Enrollment, YearlyMetric # Make sure to import your User model instead of or alongside myTask
+from flask import Blueprint, render_template, redirect, request, url_for, session, flash, jsonify
+from app.models import User, Enrollment, YearlyMetric, CalendarEvent # Make sure to import your User model instead of or alongside myTask
 from app import db
 from datetime import datetime 
 import pandas as pd
@@ -292,3 +292,73 @@ def grades():
         return redirect(url_for('main.login'))
     
     return render_template('grades.html')
+
+
+@main_bp.route("/calendar")
+def calendar():
+    if 'user_id' not in session:
+        return redirect(url_for('main.login'))
+
+    return render_template('calendar.html')
+
+
+CALENDAR_TAGS = {'holiday', 'event', 'exam'}
+ 
+ 
+def _parse_calendar_payload(data):
+    """Validate and clean the JSON body. Returns (values, error)."""
+    tag = (data.get('tag') or '').strip().lower()
+    if tag not in CALENDAR_TAGS:
+        return None, 'Invalid tag.'
+ 
+    try:
+        event_date = datetime.strptime(data.get('date', ''), '%Y-%m-%d').date()
+    except ValueError:
+        return None, 'Invalid date.'
+ 
+    description = (data.get('description') or '').strip()[:500]
+    return {'event_date': event_date, 'tag': tag, 'description': description}, None
+ 
+ 
+@main_bp.route("/calendar/events", methods=['GET', 'POST'])
+def calendar_events():
+    if 'user_id' not in session:
+        return {'error': 'Unauthorized'}, 401
+ 
+    if request.method == 'GET':
+        events = CalendarEvent.query.order_by(CalendarEvent.event_date.asc(), CalendarEvent.id.asc()).all()
+        return jsonify([e.to_dict() for e in events])
+ 
+    values, error = _parse_calendar_payload(request.get_json(silent=True) or {})
+    if error:
+        return {'error': error}, 400
+ 
+    event = CalendarEvent(**values)
+    db.session.add(event)
+    db.session.commit()
+    return jsonify(event.to_dict()), 201
+ 
+ 
+@main_bp.route("/calendar/events/<int:event_id>", methods=['PUT', 'DELETE'])
+def calendar_event_detail(event_id):
+    if 'user_id' not in session:
+        return {'error': 'Unauthorized'}, 401
+ 
+    event = CalendarEvent.query.get_or_404(event_id)
+ 
+    if request.method == 'DELETE':
+        db.session.delete(event)
+        db.session.commit()
+        return {'success': True}
+ 
+    values, error = _parse_calendar_payload(request.get_json(silent=True) or {})
+    if error:
+        return {'error': error}, 400
+ 
+    event.event_date = values['event_date']
+    event.tag = values['tag']
+    event.description = values['description']
+    db.session.commit()
+    return jsonify(event.to_dict())
+
+
