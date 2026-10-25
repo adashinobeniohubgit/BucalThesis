@@ -1,43 +1,25 @@
 from flask import Blueprint, render_template, redirect, request, url_for, session, flash, current_app, send_file, jsonify
-from app.models import User, Enrollment, YearlyMetric, Grades, CalendarEvent # Make sure to import your User model instead of or alongside myTask
+from app.models import User, Enrollment, YearlyMetric, Grades, CalendarEvent, LinkItem, FileItem # Make sure to import your User model instead of or alongside myTask
 from app import db
 from datetime import datetime 
 import pandas as pd
 from sklearn.linear_model import LinearRegression
 import os
+import io
 from io import BytesIO
 from werkzeug.utils import secure_filename
 import uuid
+from urllib.parse import urlparse
 
 
 
 main_bp = Blueprint('main', __name__)
 
-# ENROLLED
-LOCK_BOUNDARY_YEAR = 2024
-SCHOOL_YEAR_ROLLOVER_MONTH = 6
 
-# DASHBOARD
-METRIC_FIELDS = [
-    'enrollee_count', 'promotion_rate', 'cohort_survival_rate',
-    'completion_rate', 'transition_rate', 'dropout_rate',
-    'graduation_rate', 'retention_rate',
-]
 
-# GRADES
 
-GRADE_LEVELS = [
-    'Kindergarten', 'Grade 1', 'Grade 2', 'Grade 3', 'Grade 4',
-    'Grade 5', 'Grade 6'
-]
 
-ALLOWED_REPORT_EXTENSIONS = { "xlsx" }
 
-REPORT_MIME_TYPES = {
-    "xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-}
-
-MAX_REPORT_SIZE = 16 * 1024 * 1024
 
 
 
@@ -74,6 +56,12 @@ def logout():
 
 
 # Dashboard/Base View
+# DASHBOARD
+METRIC_FIELDS = [
+    'enrollee_count', 'promotion_rate', 'cohort_survival_rate',
+    'completion_rate', 'transition_rate', 'dropout_rate',
+    'graduation_rate', 'retention_rate',
+]
 
 def get_current_start_year():
 
@@ -289,6 +277,11 @@ def enrollment():
     return render_template('enrollment.html')
 
 # Enrolled Student View
+# ENROLLED
+
+LOCK_BOUNDARY_YEAR = 2024
+SCHOOL_YEAR_ROLLOVER_MONTH = 6
+
 @main_bp.route("/enrolled")
 def enrolled():
     if 'user_id' not in session:
@@ -311,6 +304,22 @@ def student_detail(student_id):
 
 
 # Grade View
+
+# GRADES
+
+GRADE_LEVELS = [
+    'Kindergarten', 'Grade 1', 'Grade 2', 'Grade 3', 'Grade 4',
+    'Grade 5', 'Grade 6'
+]
+
+ALLOWED_REPORT_EXTENSIONS = { "xlsx" }
+
+REPORT_MIME_TYPES = {
+    "xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+}
+
+MAX_REPORT_SIZE = 16 * 1024 * 1024
+
 @main_bp.route("/grades")
 def grades():
     if 'user_id' not in session:
@@ -606,3 +615,182 @@ def linkagefiles():
         return redirect(url_for('main.login'))
     
     return render_template('linkagefiles.html')
+
+
+# LINKAGES
+
+ALLOWED_EXTENSIONS = {'pdf', 'docx', 'xlsx'}
+ 
+ 
+def get_extension(filename):
+    return filename.rsplit('.', 1)[1].lower() if '.' in filename else ''
+ 
+ 
+def clean_url(raw):
+    """Return a safe http/https link, or None if it isn't valid."""
+    url = (raw or '').strip()
+    if not url:
+        return None
+    if '://' not in url:
+        url = 'https://' + url          # "example.com" becomes "https://example.com"
+    parsed = urlparse(url)
+    if parsed.scheme not in ('http', 'https') or not parsed.netloc:
+        return None                     # blocks things like javascript: links
+    return url
+ 
+ 
+def read_upload(upload):
+    """Check an uploaded file. Returns (filename, data, content_type, error)."""
+    if not upload or not upload.filename:
+        return None, None, None, 'Please choose a file.'
+    ext = get_extension(upload.filename)
+    if ext not in ALLOWED_EXTENSIONS:
+        return None, None, None, 'Only PDF, DOCX and XLSX files are allowed.'
+    base = secure_filename(upload.filename.rsplit('.', 1)[0]) or 'file'
+    data = upload.read()
+    if not data:
+        return None, None, None, 'That file is empty.'
+    return f"{base}.{ext}", data, upload.mimetype, None
+ 
+ 
+@main_bp.app_errorhandler(413)
+def file_too_large(error):
+    # Needs app.config['MAX_CONTENT_LENGTH'] to be set in create_app()
+    flash('That file is too large. The maximum size is 10 MB.', 'danger')
+    return redirect(url_for('main.linkage'))
+ 
+ 
+@main_bp.route("/linkage")
+def linkage():
+    if 'user_id' not in session:
+        return redirect(url_for('main.login'))
+ 
+    links = LinkItem.query.order_by(LinkItem.created_at.desc()).all()
+    files = FileItem.query.order_by(FileItem.uploaded_at.desc()).all()
+    return render_template('linkagefiles.html', links=links, files=files)
+ 
+ 
+# ----- Links -----
+ 
+@main_bp.route("/linkage/links/add", methods=['POST'])
+def add_link():
+    if 'user_id' not in session:
+        return redirect(url_for('main.login'))
+ 
+    title = request.form.get('title', '').strip()
+    url = clean_url(request.form.get('url'))
+ 
+    if not title or not url:
+        flash('Please enter a title and a valid link (http or https).', 'danger')
+    else:
+        db.session.add(LinkItem(title=title, url=url))
+        db.session.commit()
+        flash('Link added.', 'success')
+    return redirect(url_for('main.linkage'))
+ 
+ 
+@main_bp.route("/linkage/links/<int:link_id>/edit", methods=['POST'])
+def edit_link(link_id):
+    if 'user_id' not in session:
+        return redirect(url_for('main.login'))
+ 
+    link = LinkItem.query.get_or_404(link_id)
+    title = request.form.get('title', '').strip()
+    url = clean_url(request.form.get('url'))
+ 
+    if not title or not url:
+        flash('Please enter a title and a valid link (http or https).', 'danger')
+    else:
+        link.title = title
+        link.url = url
+        db.session.commit()
+        flash('Link updated.', 'success')
+    return redirect(url_for('main.linkage'))
+ 
+ 
+@main_bp.route("/linkage/links/<int:link_id>/delete", methods=['POST'])
+def delete_link(link_id):
+    if 'user_id' not in session:
+        return redirect(url_for('main.login'))
+ 
+    link = LinkItem.query.get_or_404(link_id)
+    db.session.delete(link)
+    db.session.commit()
+    flash('Link deleted.', 'success')
+    return redirect(url_for('main.linkage'))
+ 
+ 
+# ----- Files -----
+ 
+@main_bp.route("/linkage/files/upload", methods=['POST'])
+def upload_file():
+    if 'user_id' not in session:
+        return redirect(url_for('main.login'))
+ 
+    filename, data, content_type, error = read_upload(request.files.get('file'))
+    if error:
+        flash(error, 'danger')
+        return redirect(url_for('main.linkage'))
+ 
+    title = request.form.get('title', '').strip() or filename
+    db.session.add(FileItem(title=title, filename=filename, content_type=content_type,
+                            size=len(data), data=data))
+    db.session.commit()
+    flash('File uploaded.', 'success')
+    return redirect(url_for('main.linkage'))
+ 
+ 
+@main_bp.route("/linkage/files/<int:file_id>/edit", methods=['POST'])
+def edit_file(file_id):
+    if 'user_id' not in session:
+        return redirect(url_for('main.login'))
+ 
+    item = FileItem.query.get_or_404(file_id)
+    title = request.form.get('title', '').strip()
+    upload = request.files.get('file')
+ 
+    if not title:
+        flash('Please enter a title.', 'danger')
+        return redirect(url_for('main.linkage'))
+ 
+    # Optional: replace the stored file with a new one
+    if upload and upload.filename:
+        filename, data, content_type, error = read_upload(upload)
+        if error:
+            flash(error, 'danger')
+            return redirect(url_for('main.linkage'))
+        item.filename = filename
+        item.data = data
+        item.content_type = content_type
+        item.size = len(data)
+ 
+    item.title = title
+    db.session.commit()
+    flash('File updated.', 'success')
+    return redirect(url_for('main.linkage'))
+ 
+ 
+@main_bp.route("/linkage/files/<int:file_id>/delete", methods=['POST'])
+def delete_file(file_id):
+    if 'user_id' not in session:
+        return redirect(url_for('main.login'))
+ 
+    item = FileItem.query.get_or_404(file_id)
+    db.session.delete(item)
+    db.session.commit()
+    flash('File deleted.', 'success')
+    return redirect(url_for('main.linkage'))
+ 
+ 
+@main_bp.route("/linkage/files/<int:file_id>/download")
+def download_file(file_id):
+    if 'user_id' not in session:
+        return redirect(url_for('main.login'))
+ 
+    item = FileItem.query.get_or_404(file_id)
+    return send_file(
+        io.BytesIO(item.data),
+        as_attachment=True,
+        download_name=item.filename,
+        mimetype=item.content_type or 'application/octet-stream',
+    )

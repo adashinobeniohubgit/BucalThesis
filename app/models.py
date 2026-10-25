@@ -1,6 +1,8 @@
 from app import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
+from sqlalchemy.dialects.mysql import MEDIUMBLOB
+from sqlalchemy.orm import deferred
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -158,3 +160,31 @@ class CalendarEvent(db.Model):
             'tag': self.tag,
             'description': self.description or '',
         }
+
+
+class LinkItem(db.Model):
+    __tablename__ = 'link_item'
+ 
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(150), nullable=False)
+    url = db.Column(db.String(500), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+ 
+    def __repr__(self):
+        return f'<LinkItem {self.title}>'
+ 
+ 
+class FileItem(db.Model):
+    __tablename__ = 'file_item'
+ 
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(150), nullable=False)
+    filename = db.Column(db.String(255), nullable=False)
+    content_type = db.Column(db.String(150))
+    size = db.Column(db.Integer)
+    uploaded_at = db.Column(db.DateTime, default=datetime.utcnow)
+ 
+    data = deferred(db.Column(db.LargeBinary().with_variant(MEDIUMBLOB(), 'mysql'), nullable=False))
+ 
+    def __repr__(self):
+        return f'<FileItem {self.title}>'

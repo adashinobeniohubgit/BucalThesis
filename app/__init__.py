@@ -17,11 +17,12 @@ BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 def create_app():
     app = Flask(__name__)
     
-
+    # LOCAL CONFIG
     # app.config['SECRET_KEY'] = 'sample_secret_key'
     # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root@localhost/bucal_db'
     # app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+    #CLOUD DATABASE CONFIG
     app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'sample_secret_key')
     app.config['SQLALCHEMY_DATABASE_URI'] = (
         f"mysql+pymysql://{os.environ['DB_USER']}:{quote_plus(os.environ['DB_PASSWORD'])}"
@@ -33,6 +34,9 @@ def create_app():
         "pool_recycle": 280,
     }
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+    # FILE UPLOAD LIMIT
+    app.config['MAX_CONTENT_LENGTH'] = 10 * 1024 * 1024 # 10 MB LIMIT
 
     db.init_app(app)
     csrf.init_app(app)
