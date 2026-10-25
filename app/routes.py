@@ -609,14 +609,6 @@ def calendar_event_detail(event_id):
     return jsonify(event.to_dict())
 
 
-@main_bp.route("/linkagefiles")
-def linkagefiles():
-    if 'user_id' not in session:
-        return redirect(url_for('main.login'))
-    
-    return render_template('linkagefiles.html')
-
-
 # LINKAGES
 
 ALLOWED_EXTENSIONS = {'pdf', 'docx', 'xlsx'}
@@ -657,17 +649,22 @@ def read_upload(upload):
 def file_too_large(error):
     # Needs app.config['MAX_CONTENT_LENGTH'] to be set in create_app()
     flash('That file is too large. The maximum size is 10 MB.', 'danger')
-    return redirect(url_for('main.linkage'))
+    return redirect(url_for('main.linkagefiles'))
  
  
-@main_bp.route("/linkage")
-def linkage():
+@main_bp.route("/linkagefiles")
+def linkagefiles():
     if 'user_id' not in session:
         return redirect(url_for('main.login'))
- 
+
     links = LinkItem.query.order_by(LinkItem.created_at.desc()).all()
     files = FileItem.query.order_by(FileItem.uploaded_at.desc()).all()
-    return render_template('linkagefiles.html', links=links, files=files)
+
+    return render_template(
+        'linkagefiles.html',
+        links=links,
+        files=files
+    )
  
  
 # ----- Links -----
@@ -686,7 +683,7 @@ def add_link():
         db.session.add(LinkItem(title=title, url=url))
         db.session.commit()
         flash('Link added.', 'success')
-    return redirect(url_for('main.linkage'))
+    return redirect(url_for('main.linkagefiles'))
  
  
 @main_bp.route("/linkage/links/<int:link_id>/edit", methods=['POST'])
@@ -705,7 +702,7 @@ def edit_link(link_id):
         link.url = url
         db.session.commit()
         flash('Link updated.', 'success')
-    return redirect(url_for('main.linkage'))
+    return redirect(url_for('main.linkagefiles'))
  
  
 @main_bp.route("/linkage/links/<int:link_id>/delete", methods=['POST'])
@@ -717,7 +714,7 @@ def delete_link(link_id):
     db.session.delete(link)
     db.session.commit()
     flash('Link deleted.', 'success')
-    return redirect(url_for('main.linkage'))
+    return redirect(url_for('main.linkagefiles'))
  
  
 # ----- Files -----
@@ -730,14 +727,14 @@ def upload_file():
     filename, data, content_type, error = read_upload(request.files.get('file'))
     if error:
         flash(error, 'danger')
-        return redirect(url_for('main.linkage'))
+        return redirect(url_for('main.linkagefiles'))
  
     title = request.form.get('title', '').strip() or filename
     db.session.add(FileItem(title=title, filename=filename, content_type=content_type,
                             size=len(data), data=data))
     db.session.commit()
     flash('File uploaded.', 'success')
-    return redirect(url_for('main.linkage'))
+    return redirect(url_for('main.linkagefiles'))
  
  
 @main_bp.route("/linkage/files/<int:file_id>/edit", methods=['POST'])
@@ -751,14 +748,14 @@ def edit_file(file_id):
  
     if not title:
         flash('Please enter a title.', 'danger')
-        return redirect(url_for('main.linkage'))
+        return redirect(url_for('main.linkagefiles'))
  
     # Optional: replace the stored file with a new one
     if upload and upload.filename:
         filename, data, content_type, error = read_upload(upload)
         if error:
             flash(error, 'danger')
-            return redirect(url_for('main.linkage'))
+            return redirect(url_for('main.linkagefiles'))
         item.filename = filename
         item.data = data
         item.content_type = content_type
@@ -767,7 +764,7 @@ def edit_file(file_id):
     item.title = title
     db.session.commit()
     flash('File updated.', 'success')
-    return redirect(url_for('main.linkage'))
+    return redirect(url_for('main.linkagefiles'))
  
  
 @main_bp.route("/linkage/files/<int:file_id>/delete", methods=['POST'])
@@ -779,7 +776,7 @@ def delete_file(file_id):
     db.session.delete(item)
     db.session.commit()
     flash('File deleted.', 'success')
-    return redirect(url_for('main.linkage'))
+    return redirect(url_for('main.linkagefiles'))
  
  
 @main_bp.route("/linkage/files/<int:file_id>/download")
