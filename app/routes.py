@@ -1,20 +1,45 @@
-from flask import Blueprint, render_template, redirect, request, url_for, session, flash, jsonify
-from app.models import User, Enrollment, YearlyMetric, CalendarEvent # Make sure to import your User model instead of or alongside myTask
+from flask import Blueprint, render_template, redirect, request, url_for, session, flash, current_app, send_file, jsonify
+from app.models import User, Enrollment, YearlyMetric, Grades, CalendarEvent # Make sure to import your User model instead of or alongside myTask
 from app import db
 from datetime import datetime 
 import pandas as pd
 from sklearn.linear_model import LinearRegression
+import os
+from io import BytesIO
+from werkzeug.utils import secure_filename
+import uuid
+
+
 
 main_bp = Blueprint('main', __name__)
 
+# ENROLLED
 LOCK_BOUNDARY_YEAR = 2024
 SCHOOL_YEAR_ROLLOVER_MONTH = 6
 
+# DASHBOARD
 METRIC_FIELDS = [
     'enrollee_count', 'promotion_rate', 'cohort_survival_rate',
     'completion_rate', 'transition_rate', 'dropout_rate',
     'graduation_rate', 'retention_rate',
 ]
+
+# GRADES
+
+GRADE_LEVELS = [
+    'Kindergarten', 'Grade 1', 'Grade 2', 'Grade 3', 'Grade 4',
+    'Grade 5', 'Grade 6'
+]
+
+ALLOWED_REPORT_EXTENSIONS = { "xlsx" }
+
+REPORT_MIME_TYPES = {
+    "xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+}
+
+MAX_REPORT_SIZE = 16 * 1024 * 1024
+
+
 
 @main_bp.route("/login", methods=['GET', 'POST'])
 def login():
@@ -290,8 +315,221 @@ def student_detail(student_id):
 def grades():
     if 'user_id' not in session:
         return redirect(url_for('main.login'))
-    
-    return render_template('grades.html')
+
+    students = Enrollment.query.order_by(
+        Enrollment.last_name.asc(),
+        Enrollment.first_name.asc()
+    ).all()
+
+    return render_template(
+        'grades.html',
+        students=students,
+        student=None,
+        grade_levels=GRADE_LEVELS,
+        reports= {},
+        )
+
+@main_bp.route("/grades/<int:student_id>")
+def student_grades(student_id):
+    if "user_id" not in session:
+        return redirect(url_for("main.login"))
+
+    student = Enrollment.query.get_or_404(student_id)
+
+    reports = {
+        level: Grades.query.filter_by(
+            student_id=student.id,
+            grade_level=level
+        ).first()
+        for level in GRADE_LEVELS
+    }
+
+    return render_template(
+        "student_grades.html",
+        student=student,
+        grade_levels=GRADE_LEVELS,
+        reports=reports
+    )
+
+@main_bp.route(
+    "/grades/<int:student_id>/upload/<string:level>",
+    methods=["POST"]
+)
+
+def upload_report_card(student_id, level):
+    if "user_id" not in session:
+        return redirect(url_for("main.login"))
+
+    student = Enrollment.query.get_or_404(student_id)
+
+    if level not in GRADE_LEVELS:
+        flash("Invalid grade level.", "danger")
+        return redirect(
+            url_for("main.student_grades", student_id=student.id)
+        )
+
+    uploaded_file = request.files.get("report_card")
+
+    if not uploaded_file or not uploaded_file.filename:
+        flash("Please select a report card file.", "warning")
+        return redirect(
+            url_for("main.student_grades", student_id=student.id)
+        )
+
+    filename = secure_filename(uploaded_file.filename)
+
+    if not filename or "." not in filename:
+        flash("Invalid filename.", "danger")
+        return redirect(
+            url_for("main.student_grades", student_id=student.id)
+        )
+
+    extension = filename.rsplit(".", 1)[1].lower()
+
+    if extension not in ALLOWED_REPORT_EXTENSIONS:
+        flash(
+            "Invalid file type. Upload an Excel (.xlsx) file only",
+            "danger",
+        )
+        return redirect(
+            url_for("main.student_grades", student_id=student.id)
+        )
+
+    file_data = uploaded_file.read()
+
+    if not file_data:
+        flash("The selected file is empty.", "warning")
+        return redirect(
+            url_for("main.student_grades", student_id=student.id)
+        )
+
+    if len(file_data) > MAX_REPORT_SIZE:
+        flash("The file must be 16 MB or smaller.", "danger")
+        return redirect(
+            url_for("main.student_grades", student_id=student.id)
+        )
+
+    existing_report = Grades.query.filter_by(
+        student_id=student.id,
+        grade_level=level,
+    ).first()
+
+    try:
+        if existing_report:
+            existing_report.original_filename = filename
+            existing_report.stored_filename = (
+                f"{uuid.uuid4().hex}.{extension}"
+            )
+            existing_report.file_data = file_data
+            existing_report.mime_type = REPORT_MIME_TYPES[extension]
+            existing_report.uploaded_at = datetime.utcnow()
+
+            message = f"{level} report card replaced successfully."
+        else:
+            report = Grades(
+                student_id=student.id,
+                grade_level=level,
+                original_filename=filename,
+                stored_filename=f"{uuid.uuid4().hex}.{extension}",
+                file_data=file_data,
+                mime_type=REPORT_MIME_TYPES[extension],
+            )
+            db.session.add(report)
+            message = f"{level} report card uploaded successfully."
+
+        db.session.commit()
+        flash(message, "success")
+
+    except Exception:
+        db.session.rollback()
+        current_app.logger.exception(
+            "Failed to store report card in the database."
+        )
+        flash(
+            "Could not save the report card. Please try again.",
+            "danger",
+        )
+
+    return redirect(
+        url_for("main.student_grades", student_id=student.id)
+    )
+
+
+@main_bp.route("/report-cards/<int:report_id>/view")
+def view_report_card(report_id):
+    """Display a report card retrieved from the MySQL BLOB column."""
+    if "user_id" not in session:
+        return redirect(url_for("main.login"))
+
+    report = Grades.query.get_or_404(report_id)
+
+    if not report.file_data:
+        flash(
+            "This report card has no file data stored in the database.",
+            "warning",
+        )
+        return redirect(
+            url_for("main.student_grades", student_id=report.student_id)
+        )
+
+    return send_file(
+        BytesIO(report.file_data),
+        mimetype=report.mime_type or "application/octet-stream",
+        as_attachment=False,
+        download_name=report.original_filename,
+    )
+
+@main_bp.route("/report-cards/<int:report_id>/download")
+def download_report_card(report_id):
+    """Download a report card retrieved from the MySQL BLOB column."""
+    if "user_id" not in session:
+        return redirect(url_for("main.login"))
+
+    report = Grades.query.get_or_404(report_id)
+
+    if not report.file_data:
+        flash(
+            "This report card has no file data stored in the database.",
+            "warning",
+        )
+        return redirect(
+            url_for("main.student_grades", student_id=report.student_id)
+        )
+
+    return send_file(
+        BytesIO(report.file_data),
+        mimetype=report.mime_type or "application/octet-stream",
+        as_attachment=True,
+        download_name=report.original_filename,
+    )
+
+@main_bp.route(
+    "/report-cards/<int:report_id>/delete",
+    methods=["POST"]
+)
+def delete_report_card(report_id):
+    """Delete the report-card row and its binary contents from MySQL."""
+    if "user_id" not in session:
+        return redirect(url_for("main.login"))
+
+    report = Grades.query.get_or_404(report_id)
+    student_id = report.student_id
+
+    try:
+        db.session.delete(report)
+        db.session.commit()
+        flash("Report card deleted successfully.", "success")
+
+    except Exception:
+        db.session.rollback()
+        current_app.logger.exception(
+            "Failed to delete report card from the database."
+        )
+        flash("Could not delete the report card. Please try again.", "danger")
+
+    return redirect(
+        url_for("main.student_grades", student_id=student_id)
+    )
 
 # Calendar View
 @main_bp.route("/calendar")
