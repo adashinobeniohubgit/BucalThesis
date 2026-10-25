@@ -293,7 +293,7 @@ def grades():
     
     return render_template('grades.html')
 
-
+# Calendar View
 @main_bp.route("/calendar")
 def calendar():
     if 'user_id' not in session:
@@ -362,3 +362,9 @@ def calendar_event_detail(event_id):
     return jsonify(event.to_dict())
 
 
+@main_bp.route("/linkagefiles")
+def linkagefiles():
+    if 'user_id' not in session:
+        return redirect(url_for('main.login'))
+    
+    return render_template('linkagefiles.html')
